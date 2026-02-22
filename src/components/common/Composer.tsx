@@ -599,7 +599,8 @@ const Composer: FC<OwnProps & StateProps> = ({
     handleWithConfirmation: handleActionWithPaymentConfirmation,
   } = usePaidMessageConfirmation(starsForAllMessages, isStarsBalanceModalOpen, starsBalance);
 
-  const hasWebPagePreview = !hasAttachments && canAttachEmbedLinks && !noWebPage && Boolean(webPagePreview);
+  const hasWebPagePreview = !hasAttachments && canAttachEmbedLinks && !noWebPage
+    && webPagePreview?.webpageType === 'full';
   const isComposerBlocked = isSendTextBlocked && !editingMessage;
 
   useEffect(() => {
