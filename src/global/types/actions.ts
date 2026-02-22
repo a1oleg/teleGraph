@@ -401,7 +401,10 @@ export interface ActionPayloads {
   joinChannel: {
     chatId: string;
   } & WithTabId;
-  leaveChannel: { chatId: string } & WithTabId;
+  leaveChannel: {
+    chatId: string;
+    shouldSkipOwnershipCheck?: boolean;
+  } & WithTabId;
   deleteChannel: { chatId: string } & WithTabId;
   toggleChatPinned: {
     id: string;
@@ -2556,6 +2559,29 @@ export interface ActionPayloads {
   openGiftRecipientPicker: WithTabId | undefined;
   closeGiftRecipientPicker: WithTabId | undefined;
 
+  openLeaveGroupModal: {
+    chatId: string;
+    nextOwnerId?: string;
+  } & WithTabId;
+  closeLeaveGroupModal: WithTabId | undefined;
+
+  openTwoFaCheckModal: WithTabId | undefined;
+  closeTwoFaCheckModal: WithTabId | undefined;
+
+  verifyTransferOwnership: {
+    chatId: string;
+    userId: string;
+    onSuccess?: VoidFunction;
+    onPasswordMissing?: VoidFunction;
+    onPasswordTooFresh?: VoidFunction;
+    onSessionTooFresh?: VoidFunction;
+  };
+  transferChannelOwnership: {
+    chatId: string;
+    userId: string;
+    password: string;
+    onSuccess?: VoidFunction;
+  } & WithTabId;
   openQuickChatPicker: WithTabId | undefined;
   closeQuickChatPicker: WithTabId | undefined;
 

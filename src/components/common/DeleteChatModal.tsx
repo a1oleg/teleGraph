@@ -1,4 +1,3 @@
-import type { FC } from '../../lib/teact/teact';
 import { memo } from '../../lib/teact/teact';
 import { getActions, withGlobal } from '../../global';
 
@@ -46,7 +45,7 @@ type StateProps = {
   contactName?: string;
 };
 
-const DeleteChatModal: FC<OwnProps & StateProps> = ({
+const DeleteChatModal = ({
   isOpen,
   chat,
   isSavedDialog,
@@ -61,7 +60,7 @@ const DeleteChatModal: FC<OwnProps & StateProps> = ({
   contactName,
   onClose,
   onCloseAnimationEnd,
-}) => {
+}: OwnProps & StateProps) => {
   const {
     leaveChannel,
     deleteHistory,

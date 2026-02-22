@@ -1045,6 +1045,22 @@ const ActionMessageText = ({
       case 'phoneCall': // Rendered as a regular message, but considered an action for the summary
         return lang(getCallMessageKey(action, isOutgoing));
 
+      case 'newCreatorPending': {
+        const { newCreatorId } = action;
+        const newCreator = selectPeer(global, newCreatorId);
+        const newCreatorTitle = (newCreator && getPeerTitle(lang, newCreator)) || userFallbackText;
+        const newCreatorLink = renderPeerLink(newCreator?.id, newCreatorTitle, asPreview);
+        return lang('ActionNewCreatorPending', { user: newCreatorLink, from: senderLink }, { withNodes: true });
+      }
+
+      case 'changeCreator': {
+        const { newCreatorId } = action;
+        const newCreator = selectPeer(global, newCreatorId);
+        const newCreatorTitle = (newCreator && getPeerTitle(lang, newCreator)) || userFallbackText;
+        const newCreatorLink = renderPeerLink(newCreator?.id, newCreatorTitle, asPreview);
+        return lang('ActionChangeCreator', { user: newCreatorLink, from: senderLink }, { withNodes: true });
+      }
+
       case 'starGiftPurchaseOffer': {
         const { gift, price } = action;
 

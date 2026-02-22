@@ -43,6 +43,7 @@ import GiftInfoValueModal from './gift/value/GiftInfoValueModal.async';
 import GiftWithdrawModal from './gift/withdraw/GiftWithdrawModal.async';
 import GiftCodeModal from './giftcode/GiftCodeModal.async';
 import InviteViaLinkModal from './inviteViaLink/InviteViaLinkModal.async';
+import LeaveGroupModal from './leaveGroup/LeaveGroupModal.async';
 import LocationAccessModal from './locationAccess/LocationAccessModal.async';
 import MapModal from './map/MapModal.async';
 import OneTimeMediaModal from './oneTimeMedia/OneTimeMediaModal.async';
@@ -66,6 +67,7 @@ import StealthModeModal from './storyStealthMode/StealthModeModal.async';
 import SuggestedPostApprovalModal from './suggestedPostApproval/SuggestedPostApprovalModal.async';
 import SuggestedStatusModal from './suggestedStatus/SuggestedStatusModal.async';
 import SuggestMessageModal from './suggestMessage/SuggestMessageModal.async';
+import TwoFaCheckModal from './twoFaCheck/TwoFaCheckModal.async';
 import UrlAuthModal from './urlAuth/UrlAuthModal.async';
 import WebAppModal from './webApp/WebAppModal.async';
 
@@ -131,6 +133,8 @@ type ModalKey = keyof Pick<TabState,
   'storyStealthModal' |
   'isPasskeyModalOpen' |
   'birthdaySetupModal' |
+  'leaveGroupModal' |
+  'isTwoFaCheckModalOpen' |
   'isQuickChatPickerOpen' |
   'isCocoonModalOpen'
 >;
@@ -208,6 +212,8 @@ const MODALS: ModalRegistry = {
   storyStealthModal: StealthModeModal,
   isPasskeyModalOpen: PasskeyModal,
   birthdaySetupModal: BirthdaySetupModal,
+  leaveGroupModal: LeaveGroupModal,
+  isTwoFaCheckModalOpen: TwoFaCheckModal,
   isQuickChatPickerOpen: QuickChatPickerModal,
   isCocoonModalOpen: CocoonModal,
 };

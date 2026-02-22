@@ -889,12 +889,28 @@ addActionHandler('deleteChat', (global, actions, payload): ActionReturnType => {
 });
 
 addActionHandler('leaveChannel', async (global, actions, payload): Promise<void> => {
-  const { chatId, tabId = getCurrentTabId() } = payload;
+  const { chatId, shouldSkipOwnershipCheck, tabId = getCurrentTabId() } = payload;
   const chat = selectChat(global, chatId);
   if (!chat) {
     return;
   }
 
+  if (!shouldSkipOwnershipCheck && chat.isCreator && chat.accessHash) {
+    const futureCreator = await callApi('fetchFutureCreatorAfterLeave', { chat });
+    if (futureCreator) {
+      global = getGlobal();
+      const hasPassword = global.settings.byKey.hasPassword;
+      if (!hasPassword) {
+        actions.openTwoFaCheckModal({ tabId });
+        return;
+      }
+
+      actions.openLeaveGroupModal({ chatId, nextOwnerId: futureCreator.id, tabId });
+      return;
+    }
+  }
+
+  global = getGlobal();
   global = leaveChat(global, chatId);
   setGlobal(global);
 
@@ -902,15 +918,76 @@ addActionHandler('leaveChannel', async (global, actions, payload): Promise<void>
     actions.openChat({ id: undefined, tabId });
   }
 
-  const { id: channelId, accessHash } = chat;
-  if (channelId && accessHash) {
-    await callApi('leaveChannel', { channelId, accessHash });
-    global = getGlobal();
-    const chatMessages = selectChatMessages(global, chatId);
-    const localMessageIds = Object.keys(chatMessages).map(Number).filter(isLocalMessageId);
-    global = deleteChatMessages(global, chatId, localMessageIds);
-    setGlobal(global);
+  await callApi('leaveChannel', { chat });
+  global = getGlobal();
+  const chatMessages = selectChatMessages(global, chatId);
+  const localMessageIds = Object.keys(chatMessages).map(Number).filter(isLocalMessageId);
+  global = deleteChatMessages(global, chatId, localMessageIds);
+  setGlobal(global);
+});
+
+addActionHandler('verifyTransferOwnership', async (global, actions, payload): Promise<void> => {
+  const {
+    chatId, userId, onSuccess, onPasswordMissing, onPasswordTooFresh, onSessionTooFresh,
+  } = payload;
+
+  const chat = selectChat(global, chatId);
+  const user = selectUser(global, userId);
+  if (!chat || !user) {
+    return;
   }
+
+  const result = await callApi('verifyTransferOwnership', {
+    chat,
+    user,
+  });
+
+  if (!result) {
+    return;
+  }
+
+  if ('canTransfer' in result) {
+    onSuccess?.();
+    return;
+  }
+
+  switch (result.errorMessage) {
+    case 'PASSWORD_MISSING':
+      onPasswordMissing?.();
+      break;
+    case 'PASSWORD_TOO_FRESH':
+      onPasswordTooFresh?.();
+      break;
+    case 'SESSION_TOO_FRESH':
+      onSessionTooFresh?.();
+      break;
+    default:
+      break;
+  }
+});
+
+addActionHandler('transferChannelOwnership', async (global, actions, payload): Promise<void> => {
+  const {
+    chatId, userId, password, onSuccess,
+  } = payload;
+
+  const chat = selectChat(global, chatId);
+  const user = selectUser(global, userId);
+  if (!chat?.accessHash || !user?.accessHash) {
+    return;
+  }
+
+  const result = await callApi('editChannelCreator', {
+    chat,
+    user,
+    password,
+  });
+
+  if (result !== true) {
+    return;
+  }
+
+  onSuccess?.();
 });
 
 addActionHandler('deleteChannel', (global, actions, payload): ActionReturnType => {

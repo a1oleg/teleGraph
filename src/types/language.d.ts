@@ -844,6 +844,9 @@ export interface LangPair {
   'ChannelEditAdminCannotEdit': undefined;
   'EditAdminRank': undefined;
   'EditAdminRemoveAdmin': undefined;
+  'EditAdminTransferChannelOwnership': undefined;
+  'EditAdminTransferGroupOwnership': undefined;
+  'EditAdminTransferChangeOwner': undefined;
   'ChannelAdminDismiss': undefined;
   'ChannelPermissionsHeader': undefined;
   'UserRestrictionsSend': undefined;
@@ -1917,6 +1920,18 @@ export interface LangPair {
   'SettingsDataClearMediaCache': undefined;
   'SettingsDataClearMediaCacheDescription': undefined;
   'SettingsDataClearMediaDone': undefined;
+  'LeaveGroupAppointOwner': undefined;
+  'LeaveGroupAdmins': undefined;
+  'LeaveGroupMembers': undefined;
+  'SecurityCheck': undefined;
+  'SecurityCheckInfo': undefined;
+  'SecurityCheckTwoStepEnabled': undefined;
+  'SecurityCheckTwoStepNotChanged': undefined;
+  'SecurityCheckLoggedIn': undefined;
+  'SecurityCheckEnableTwoStep': undefined;
+  'EnterPassword': undefined;
+  'EnterPasswordDescription': undefined;
+  'Transfer': undefined;
   'TranslateMenuCocoonLinkText': undefined;
   'CocoonTitle': undefined;
   'CocoonDescription': undefined;
@@ -2101,6 +2116,9 @@ export interface LangPairWithVariables<V = LangVariable> {
   'ErrorPasswordFresh': {
     'time': V;
   };
+  'ErrorSessionFresh': {
+    'time': V;
+  };
   'ErrorUnexpectedMessage': {
     'error': V;
   };
@@ -2149,6 +2167,16 @@ export interface LangPairWithVariables<V = LangVariable> {
   };
   'AreYouSureDeleteThisChatWithGroup': {
     'chat': V;
+  };
+  'EditAdminTransferOwnershipText': {
+    'chat': V;
+    'user': V;
+  };
+  'EditAdminTransferChannelOwnershipSuccess': {
+    'user': V;
+  };
+  'EditAdminTransferGroupOwnershipSuccess': {
+    'user': V;
   };
   'LinkExpiresIn': {
     'time': V;
@@ -3274,6 +3302,14 @@ export interface LangPairWithVariables<V = LangVariable> {
   'ActionStarGiftPrepaidUpgraded': {
     'user': V;
   };
+  'ActionNewCreatorPending': {
+    'user': V;
+    'from': V;
+  };
+  'ActionChangeCreator': {
+    'from': V;
+    'user': V;
+  };
   'FileTransferProgress': {
     'currentSize': V;
     'totalSize': V;
@@ -3374,6 +3410,16 @@ export interface LangPairWithVariables<V = LangVariable> {
   'GroupStatusWithOnline': {
     'status': V;
     'onlineCount': V;
+  };
+  'LeaveGroupTitle': {
+    'group': V;
+  };
+  'LeaveGroupDescription': {
+    'nextOwner': V;
+    'group': V;
+  };
+  'LeaveGroupJoinedDate': {
+    'date': V;
   };
   'TranslateMenuCocoon': {
     'link': V;

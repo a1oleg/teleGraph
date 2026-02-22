@@ -1,5 +1,5 @@
 import { Api as GramJs } from '../../../lib/gramjs';
-import { RPCError } from '../../../lib/gramjs/errors';
+import { PasswordFreshError, RPCError, SessionFreshError } from '../../../lib/gramjs/errors';
 
 import type { ChatListType, ThreadReadState } from '../../../types';
 import {
@@ -82,13 +82,14 @@ import {
 import {
   addPhotoToLocalDb,
 } from '../helpers/localDb';
-import { isChatFolder } from '../helpers/misc';
+import { checkErrorType, isChatFolder, wrapError } from '../helpers/misc';
 import { scheduleMutedChatUpdate } from '../scheduleUnmute';
 import { sendApiUpdate } from '../updates/apiUpdateEmitter';
 import {
   applyState, updateChannelState,
 } from '../updates/updateManager';
 import { handleGramJsUpdate, invokeRequest, uploadFile } from './client';
+import { getPassword } from './twoFaSettings';
 
 type FullChatData = {
   fullInfo: ApiChatFullInfo;
@@ -960,16 +961,86 @@ export function deleteChat({
   });
 }
 
-export function leaveChannel({
-  channelId, accessHash,
-}: {
-  channelId: string; accessHash: string;
-}) {
+export function leaveChannel({ chat }: { chat: ApiChat }) {
   return invokeRequest(new GramJs.channels.LeaveChannel({
-    channel: buildInputChannel(channelId, accessHash),
+    channel: buildInputChannel(chat.id, chat.accessHash),
   }), {
     shouldReturnTrue: true,
   });
+}
+
+export async function fetchFutureCreatorAfterLeave({ chat }: { chat: ApiChat }) {
+  const result = await invokeRequest(new GramJs.channels.GetFutureCreatorAfterLeave({
+    channel: buildInputChannel(chat.id, chat.accessHash),
+  }));
+
+  if (!result) {
+    return undefined;
+  }
+
+  return buildApiUser(result);
+}
+
+export async function verifyTransferOwnership({
+  chat, user,
+}: {
+  chat: ApiChat;
+  user: ApiUser;
+}) {
+  try {
+    await invokeRequest(new GramJs.channels.EditCreator({
+      channel: buildInputChannel(chat.id, chat.accessHash),
+      userId: buildInputUser(user.id, user.accessHash),
+      password: new GramJs.InputCheckPasswordEmpty(),
+    }), {
+      shouldReturnTrue: true,
+      shouldThrow: true,
+    });
+
+    return { canTransfer: true };
+  } catch (err: any) {
+    if (!checkErrorType(err)) return undefined;
+
+    if (err instanceof RPCError && err.errorMessage === 'PASSWORD_HASH_INVALID') return { canTransfer: true };
+
+    if (err instanceof PasswordFreshError) return { errorMessage: 'PASSWORD_TOO_FRESH' };
+    if (err instanceof SessionFreshError) return { errorMessage: 'SESSION_TOO_FRESH' };
+    if (err instanceof RPCError && err.errorMessage === 'PASSWORD_MISSING') return { errorMessage: 'PASSWORD_MISSING' };
+
+    return wrapError(err);
+  }
+}
+
+export async function editChannelCreator({
+  chat, user, password,
+}: {
+  chat: ApiChat;
+  user: ApiUser;
+  password: string;
+}) {
+  try {
+    const passwordCheck = await getPassword(password);
+
+    if (!passwordCheck) {
+      return undefined;
+    }
+
+    if ('error' in passwordCheck) {
+      return passwordCheck;
+    }
+
+    return invokeRequest(new GramJs.channels.EditCreator({
+      channel: buildInputChannel(chat.id, chat.accessHash),
+      userId: buildInputUser(user.id, user.accessHash),
+      password: passwordCheck,
+    }), {
+      shouldReturnTrue: true,
+      shouldThrow: true,
+    });
+  } catch (err) {
+    if (!checkErrorType(err)) return undefined;
+    return wrapError(err);
+  }
 }
 
 export function deleteChannel({

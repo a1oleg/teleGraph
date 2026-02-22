@@ -116,6 +116,7 @@ Convesion from and to Api* objects is done by `apiBuilders` (function name start
   const result = await callApi('methodName', { /* params */ });
   ```
 * Always check for `undefined` before proceeding.
+* **IMPORTANT: Do not pass `accessHash` directly to API methods.** Methods that accept separate `id` and `accessHash` parameters are outdated. Instead, pass the full `ApiPeer`, `ApiChat`, or `ApiUser` object. The `buildInput*` functions in `gramjsBuilders` will extract the necessary fields.
 
 ## 4. Example
 

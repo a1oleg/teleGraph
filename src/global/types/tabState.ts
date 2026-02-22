@@ -971,6 +971,13 @@ export type TabState = {
 
   isPasskeyModalOpen?: boolean;
 
+  leaveGroupModal?: {
+    chatId: string;
+    nextOwnerId?: string;
+  };
+
+  isTwoFaCheckModalOpen?: true;
+
   isWaitingForStarGiftUpgrade?: true;
   isWaitingForStarGiftTransfer?: true;
   insertingPeerIdMention?: string;
