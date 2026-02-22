@@ -702,6 +702,7 @@ const ActionMessageText = ({
         if (isSavedMessages) {
           if (isUpgrade) return lang('ActionStarGiftUpgradedSelf');
           if (isTransferred) return lang('ActionStarGiftTransferredSelf');
+          if (gift.isCrafted) return lang('ActionStarGiftCraftedSelf');
         }
 
         if (isUpgrade) {

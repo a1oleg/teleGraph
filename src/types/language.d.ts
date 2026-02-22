@@ -1521,6 +1521,8 @@ export interface LangPair {
   'ActionGiftUniqueSent': undefined;
   'ActionStarGiftUpgradedSelf': undefined;
   'ActionStarGiftTransferredSelf': undefined;
+  'ActionStarGiftCraftedSelf': undefined;
+  'ActionStarGiftCrafted': undefined;
   'ActionStarGiftTransferredUnknown': undefined;
   'ActionStarGiftNoConvertTextYou': undefined;
   'ActionStarGiftDisplaying': undefined;
@@ -1529,6 +1531,8 @@ export interface LangPair {
   'ActionStarGiftUpgraded': undefined;
   'ActionStarGiftUnpack': undefined;
   'ActionStarGiftUniqueRibbon': undefined;
+  'ActionStarGiftUniqueBurnedRibbon': undefined;
+  'ActionStarGiftUniqueBurnedError': undefined;
   'ActionStarGiftUniqueModel': undefined;
   'ActionStarGiftUniqueBackdrop': undefined;
   'ActionStarGiftUniqueSymbol': undefined;
@@ -2375,6 +2379,10 @@ export interface LangPairWithVariables<V = LangVariable> {
     'total': V;
   };
   'GiftInfoCollectible': {
+    'number': V;
+  };
+  'GiftInfoUniqueTitle': {
+    'name': V;
     'number': V;
   };
   'GiftSavedNumber': {

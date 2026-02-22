@@ -1572,14 +1572,15 @@
 "GiftInfoOwner" = "Owner";
 "GiftInfoIssued" = "{issued}/{total} issued";
 "GiftInfoCollectible" = "Collectible #{number}";
+"GiftInfoUniqueTitle" = "{name} {number}";
 "GiftSavedNumber" = "#{number}";
 "GiftAttributeModel" = "Model";
 "GiftAttributeBackdrop" = "Backdrop";
 "GiftAttributeSymbol" = "Symbol";
-"GiftRarityUncommon" = "Uncommon";
-"GiftRarityRare" = "Rare";
-"GiftRarityEpic" = "Epic";
-"GiftRarityLegendary" = "Legendary";
+"GiftRarityUncommon" = "uncommon";
+"GiftRarityRare" = "rare";
+"GiftRarityEpic" = "epic";
+"GiftRarityLegendary" = "legendary";
 "GiftInfoPeerOriginalInfo" = "Gifted to {peer} on {date}.";
 "GiftInfoPeerOriginalInfoSender" = "Gifted by {sender} to {peer} on {date}.";
 "GiftInfoPeerOriginalInfoText" = "Gifted to {peer} on {date} with comment \"{text}\".";
@@ -1923,6 +1924,8 @@
 "ActionStarGiftTransferredChannelYou" = "You transferred a gift to {channel}";
 "ActionStarGiftTransferredMine" = "You transferred a gift to {user}";
 "ActionStarGiftTransferredSelf" = "You transferred a unique collectible";
+"ActionStarGiftCraftedSelf" = "You crafted a new gift!";
+"ActionStarGiftCrafted" = "Crafted Gift";
 "ActionStarGiftTransferredUnknown" = "Someone transferred you a gift";
 "ActionStarGiftTransferredUnknownChannel" = "Someone transferred a gift to {channel}";
 "ActionStarGiftSoldFromOffer" = "You sold {gift} to {user} for {cost}";
@@ -1950,6 +1953,8 @@
 "ActionStarGiftUnpack" = "Unpack";
 "ActionStarGiftLimitedRibbon" = "1 of {total}";
 "ActionStarGiftUniqueRibbon" = "gift";
+"ActionStarGiftUniqueBurnedRibbon" = "burned";
+"ActionStarGiftUniqueBurnedError" = "Sorry, this gift has already been burned.";
 "ActionStarGiftUniqueModel" = "Model";
 "ActionStarGiftUniqueBackdrop" = "Backdrop";
 "ActionStarGiftUniqueSymbol" = "Symbol";

@@ -61,6 +61,8 @@ export interface ApiStarGiftUnique {
   valueAmount?: number;
   valueUsdAmount?: number;
   offerMinStars?: number;
+  isBurned?: true;
+  isCrafted?: true;
 }
 
 export type ApiStarGift = ApiStarGiftRegular | ApiStarGiftUnique;

@@ -1,4 +1,5 @@
 import { Api as GramJs } from '../../../lib/gramjs';
+import { RPCError } from '../../../lib/gramjs/errors';
 
 import type { GiftProfileFilterOptions, ResaleGiftsFilterOptions } from '../../../types';
 import type {
@@ -389,13 +390,22 @@ export async function fetchStarsTopupOptions() {
 export async function fetchUniqueStarGift({ slug }: {
   slug: string;
 }) {
-  const result = await invokeRequest(new GramJs.payments.GetUniqueStarGift({ slug }));
+  try {
+    const result = await invokeRequest(new GramJs.payments.GetUniqueStarGift({ slug }), {
+      shouldThrow: true,
+    });
 
-  if (!result) return undefined;
+    if (!result) return undefined;
 
-  const gift = buildApiStarGift(result.gift);
-  if (gift.type !== 'starGiftUnique') return undefined;
-  return gift;
+    const gift = buildApiStarGift(result.gift);
+    if (gift.type !== 'starGiftUnique') return undefined;
+    return gift;
+  } catch (err) {
+    if (err instanceof RPCError) {
+      return wrapError(err);
+    }
+    return undefined;
+  }
 }
 
 export async function fetchStarGiftUpgradePreview({

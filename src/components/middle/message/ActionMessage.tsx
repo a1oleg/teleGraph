@@ -158,6 +158,7 @@ const ActionMessage = ({
     focusMessage,
     openGiftOfferAcceptModal,
     declineStarGiftOffer,
+    showNotification,
   } = getActions();
 
   const ref = useRef<HTMLDivElement>();
@@ -371,8 +372,19 @@ const ActionMessage = ({
         break;
       }
 
-      case 'starGift':
+      case 'starGift': {
+        openGiftInfoModalFromMessage({
+          chatId: message.chatId,
+          messageId: message.id,
+        });
+        break;
+      }
+
       case 'starGiftUnique': {
+        if (action.gift.isBurned) {
+          showNotification({ message: lang('ActionStarGiftUniqueBurnedError') });
+          break;
+        }
         openGiftInfoModalFromMessage({
           chatId: message.chatId,
           messageId: message.id,
