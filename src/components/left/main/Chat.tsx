@@ -204,6 +204,8 @@ const Chat: FC<OwnProps & StateProps> = ({
 
   const { isForum, isForumAsMessages, isMonoforum } = chat || {};
 
+  const shouldForceNonForumView = chat?.isBotForum && listedTopicIds && !listedTopicIds.length;
+
   useEnsureMessage(isSavedDialog ? currentUserId : chatId, lastMessageId, lastMessage);
 
   const tagFolderIds = useMemo(() => {
@@ -244,6 +246,7 @@ const Chat: FC<OwnProps & StateProps> = ({
     onReorderAnimationEnd,
     topicIds: listedTopicIds,
     hasTags: shouldRenderTags,
+    shouldForceNonForumView,
   });
 
   const getIsForumPanelClosed = useSelectorSignal(selectIsForumPanelClosed);
@@ -255,7 +258,7 @@ const Chat: FC<OwnProps & StateProps> = ({
       return;
     }
 
-    const noForumTopicPanel = isMobile && isForumAsMessages;
+    const noForumTopicPanel = (isMobile && isForumAsMessages) || shouldForceNonForumView;
 
     if (isMobile) {
       setShouldCloseRightColumn({ value: true });
@@ -288,7 +291,7 @@ const Chat: FC<OwnProps & StateProps> = ({
           openForumPanel({ chatId }, { forceOnHeavyAnimation: true });
         }
 
-        if (!isForumAsMessages) return;
+        if (!isForumAsMessages && !shouldForceNonForumView) return;
       }
     }
 
@@ -397,7 +400,7 @@ const Chat: FC<OwnProps & StateProps> = ({
   const chatClassName = buildClassName(
     'Chat chat-item-clickable',
     isUserId(chatId) ? 'private' : 'group',
-    isForum && 'forum',
+    isForum && !shouldForceNonForumView && 'forum',
     isSelected && 'selected',
     isSelectedForum && 'selected-forum',
     isPreview && 'standalone',

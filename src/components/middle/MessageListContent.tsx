@@ -60,7 +60,7 @@ interface OwnProps {
   withUsers: boolean;
   isChannelChat: boolean | undefined;
   isChatMonoforum?: boolean;
-  isBotForum?: boolean;
+  canManageBotForumTopics?: boolean;
   isEmptyThread?: boolean;
   isComments?: boolean;
   noAvatars: boolean;
@@ -101,7 +101,7 @@ const MessageListContent = ({
   withUsers,
   isChannelChat,
   isChatMonoforum,
-  isBotForum,
+  canManageBotForumTopics,
   noAvatars,
   containerRef,
   anchorIdRef,
@@ -256,7 +256,7 @@ const MessageListContent = ({
   };
 
   const renderBotForumTopicAction = () => {
-    if (!isBotForum || threadId !== MAIN_THREAD_ID) return undefined;
+    if (!canManageBotForumTopics || threadId !== MAIN_THREAD_ID) return undefined;
     return (
       <div className={buildClassName('local-action-message', actionMessageStyles.root)} key="botforum-new-topic">
         <div className={actionMessageStyles.contentBox}>

@@ -11,7 +11,7 @@ import {
   DEBUG, STRICTERDOM_ENABLED,
 } from './config';
 import { enableStrict, requestMutation } from './lib/fasterdom/fasterdom';
-import { selectChat, selectChatFullInfo, selectCurrentMessageList, selectTabState } from './global/selectors';
+import { selectChat, selectCurrentMessageList, selectPeerFullInfo, selectTabState } from './global/selectors';
 import { selectSharedSettings } from './global/selectors/sharedState';
 import { betterView } from './util/betterView';
 import { IS_TAURI } from './util/browser/globalEnvironment';
@@ -115,7 +115,7 @@ async function init() {
         console.warn(
           'CURRENT MESSAGE LIST',
           selectChat(currentGlobal, currentMessageList.chatId),
-          selectChatFullInfo(currentGlobal, currentMessageList.chatId),
+          selectPeerFullInfo(currentGlobal, currentMessageList.chatId),
           currentGlobal.messages.byChatId[currentMessageList.chatId],
         );
       }

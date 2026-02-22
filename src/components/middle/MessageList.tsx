@@ -45,6 +45,7 @@ import {
   selectTabState,
   selectTopic,
   selectTranslationLanguage,
+  selectUser,
   selectUserFullInfo,
 } from '../../global/selectors';
 import { selectIsChatRestricted } from '../../global/selectors/chats';
@@ -149,7 +150,7 @@ type StateProps = {
   translationLanguage?: string;
   shouldAutoTranslate?: boolean;
   isActive?: boolean;
-  isBotForum?: boolean;
+  canManageBotForumTopics?: boolean;
   shouldScrollToBottom?: boolean;
 };
 
@@ -199,7 +200,7 @@ const MessageList = ({
   canPost,
   isSynced,
   isActive,
-  isBotForum,
+  canManageBotForumTopics,
   shouldScrollToBottom,
   // eslint-disable-next-line @typescript-eslint/no-shadow
   isChatMonoforum,
@@ -812,7 +813,7 @@ const MessageList = ({
     Content.StarsRequired
   ) : isContactRequirePremium && !hasMessages ? (
     Content.PremiumRequired
-  ) : (isBot || isNonContact) && !hasMessages ? (
+  ) : (isBot || isNonContact) && !hasMessages && threadId === MAIN_THREAD_ID ? (
     Content.AccountInfo
   ) : shouldRenderGreeting ? (
     Content.ContactGreeting
@@ -878,7 +879,7 @@ const MessageList = ({
         noAppearanceAnimation={!messageGroups || !shouldAnimateAppearanceRef.current}
         isQuickPreview={isQuickPreview}
         canPost={canPost}
-        isBotForum={isBotForum}
+        canManageBotForumTopics={canManageBotForumTopics}
         shouldScrollToBottom={shouldScrollToBottom}
         onScrollDownToggle={onScrollDownToggle}
         onNotchToggle={onNotchToggle}
@@ -910,6 +911,7 @@ export default memo(withGlobal<OwnProps>(
     const tabState = selectTabState(global);
     const currentUserId = global.currentUserId!;
     const chat = selectChat(global, chatId);
+    const user = selectUser(global, chatId);
     const userFullInfo = selectUserFullInfo(global, chatId);
     const readState = selectThreadReadState(global, chatId, threadId);
     if (!chat) {
@@ -1014,7 +1016,7 @@ export default memo(withGlobal<OwnProps>(
       canTranslate,
       translationLanguage,
       shouldAutoTranslate,
-      isBotForum: chat.isBotForum,
+      canManageBotForumTopics: chat.isBotForum && user?.canManageBotForumTopics,
       shouldScrollToBottom,
     };
   },

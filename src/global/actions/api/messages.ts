@@ -392,6 +392,7 @@ addActionHandler('sendMessage', async (global, actions, payload): Promise<void> 
   }
 
   const chat = selectChat(global, chatId!)!;
+  const user = selectUser(global, chatId!);
   const draft = selectDraft(global, chatId!, threadId!);
   const isForwarding = selectTabState(global, tabId).forwardMessages?.messageIds?.length;
 
@@ -450,7 +451,8 @@ addActionHandler('sendMessage', async (global, actions, payload): Promise<void> 
     suggestedMedia = suggestedMessage.content;
   }
 
-  if (chat.isBotForum && threadId === MAIN_THREAD_ID && replyInfo?.type === 'message') {
+  if (chat.isBotForum && threadId === MAIN_THREAD_ID && replyInfo?.type === 'message'
+    && user?.canManageBotForumTopics) {
     const replyMessage = selectChatMessage(global, chatId!, replyInfo.replyToMsgId);
     const replyThreadId = replyMessage && selectThreadIdFromMessage(global, replyMessage);
     actions.openThread({
@@ -490,7 +492,9 @@ addActionHandler('sendMessage', async (global, actions, payload): Promise<void> 
   }
 
   // Create new bot forum topic
-  if (chat.isBotForum && threadId === MAIN_THREAD_ID && replyInfo?.type !== 'message') {
+  if (chat.isBotForum && user?.canManageBotForumTopics && threadId === MAIN_THREAD_ID
+    && replyInfo?.type !== 'message'
+  ) {
     const baseTitle = params.text ?? getTranslationFn()('BotForumTopicTitlePlaceholder');
     const title = baseTitle.length > 12 ? `${baseTitle.slice(0, 12)}...` : baseTitle;
     const topic = await callApi('createTopic', {

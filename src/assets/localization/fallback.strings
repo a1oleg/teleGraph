@@ -1374,6 +1374,7 @@
 "ComposerPlaceholderBroadcastSilent" = "Silent Broadcast";
 "ComposerPlaceholderTopic" = "Message in {topic}";
 "ComposerPlaceholderTopicGeneral" = "Message in General";
+"ComposerPlaceholderBotTopicGeneral" = "Off-thread message";
 "ComposerStoryPlaceholderLocked" = "Replies restricted";
 "ComposerPlaceholderNoText" = "Text not allowed";
 "AriaComposerCancelVoice" = "Cancel voice recording";

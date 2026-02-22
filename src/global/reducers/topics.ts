@@ -27,7 +27,7 @@ const SAFE_MIN_PROPERTIES: (keyof ApiTopic)[] = [
 export function updateTopicsInfo<T extends GlobalState>(
   global: T, chatId: string, update: Partial<TopicsInfo>,
 ) {
-  const info = global.chats.topicsInfoById[chatId] || {};
+  const info = global.chats.topicsInfoById[chatId] || { topicsById: {} };
 
   global = {
     ...global,
