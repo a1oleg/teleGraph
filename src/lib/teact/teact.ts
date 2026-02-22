@@ -170,6 +170,45 @@ export function isParentElement($element: VirtualElement): $element is VirtualEl
   );
 }
 
+function cloneElement($element: VirtualElement): VirtualElement {
+  switch ($element.type) {
+    case VirtualType.Empty:
+      return { type: VirtualType.Empty };
+    case VirtualType.Text:
+      return { type: VirtualType.Text, value: $element.value };
+    case VirtualType.Tag:
+      return {
+        type: VirtualType.Tag,
+        tag: $element.tag,
+        props: $element.props,
+        children: $element.children.map(cloneElement),
+      };
+    case VirtualType.Component: {
+      const { componentInstance } = $element;
+      return createComponentInstance(componentInstance.Component, componentInstance.props, []);
+    }
+    case VirtualType.Fragment:
+      return {
+        type: VirtualType.Fragment,
+        children: $element.children.map(cloneElement),
+      };
+  }
+}
+
+// Check if an element has been used (mounted/rendered) and needs cloning for reuse
+export function isElementUsed($element: VirtualElement): boolean {
+  switch ($element.type) {
+    case VirtualType.Component:
+      return $element.componentInstance.mountState !== MountState.Unmounted;
+    case VirtualType.Fragment:
+      return $element.placeholderTarget !== undefined || $element.children.some(isElementUsed);
+    case VirtualType.Tag:
+    case VirtualType.Text:
+    case VirtualType.Empty:
+      return $element.target !== undefined;
+  }
+}
+
 function createElement(
   source: string | FC | typeof Fragment,
   props: Props,
@@ -1061,7 +1100,8 @@ export function DEBUG_resolveComponentName(Component: FC_withDebug) {
 
 export default {
   createElement,
+  cloneElement,
   Fragment,
 };
 
-export { createElement, Fragment };
+export { createElement, cloneElement, Fragment };
