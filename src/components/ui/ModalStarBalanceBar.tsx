@@ -1,6 +1,4 @@
-import {
-  memo,
-} from '../../lib/teact/teact';
+import { memo } from '../../lib/teact/teact';
 import { getActions, withGlobal } from '../../global';
 
 import type { ApiStarsAmount, ApiTonAmount } from '../../api/types';
@@ -10,6 +8,7 @@ import buildClassName from '../../util/buildClassName';
 import { convertTonFromNanos, convertTonToUsd, formatCurrencyAsString } from '../../util/formatCurrency';
 import { formatStarsAsIcon, formatTonAsIcon } from '../../util/localization/format';
 
+import useIsTopmostBalanceBarModal from '../../hooks/element/useIsTopmostBalanceBarModal';
 import useLang from '../../hooks/useLang';
 import useLastCallback from '../../hooks/useLastCallback';
 import useShowTransition from '../../hooks/useShowTransition';
@@ -56,6 +55,8 @@ function ModalStarBalanceBar({
     withShouldRender: true,
   });
 
+  const isTopmost = useIsTopmostBalanceBarModal(ref, Boolean(shouldRender && currentBalance));
+
   const handleGetMoreStars = useLastCallback(() => {
     openStarsBalanceModal(isTonMode ? { currency: 'TON' } : {});
   });
@@ -66,7 +67,7 @@ function ModalStarBalanceBar({
 
   return (
     <div
-      className={buildClassName(styles.root)}
+      className={buildClassName(styles.root, !isTopmost && styles.hidden)}
       ref={ref}
     >
       <div>
@@ -101,7 +102,7 @@ function ModalStarBalanceBar({
           </div>
         )}
         {!isTonMode && (
-          <Link isPrimary onClick={handleGetMoreStars}>
+          <Link className={styles.getMoreStarsLink} isPrimary onClick={handleGetMoreStars}>
             {lang('GetMoreStarsLinkText')}
           </Link>
         )}

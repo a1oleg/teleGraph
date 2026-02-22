@@ -40,7 +40,6 @@ import Button from '../../ui/Button';
 import InfiniteScroll from '../../ui/InfiniteScroll';
 import Modal from '../../ui/Modal';
 import Transition from '../../ui/Transition';
-import BalanceBlock from '../stars/BalanceBlock';
 import GiftComposer from './GiftComposer';
 import GiftItemPremium from './GiftItemPremium';
 import GiftItemStar from './GiftItemStar';
@@ -518,23 +517,25 @@ const GiftModal: FC<OwnProps & StateProps> = ({
       const isFirstLoading = areResaleGiftsLoading && !resaleGiftsCount;
       return (
         <div className={styles.resaleHeaderContentContainer}>
-          <h2 className={styles.resaleHeaderText}>
-            {selectedResaleGift.title}
-          </h2>
-          {isFirstLoading
-            && (
-              <div className={styles.resaleHeaderDescription}>
-                {lang('Loading')}
-              </div>
-            )}
-          {!isFirstLoading && resaleGiftsCount !== undefined
-            && (
-              <div className={styles.resaleHeaderDescription}>
-                {lang('HeaderDescriptionResaleGifts', {
-                  count: resaleGiftsCount,
-                }, { withNodes: true, withMarkdown: true, pluralValue: resaleGiftsCount })}
-              </div>
-            )}
+          <div className={styles.resaleHeaderTextBlock}>
+            <h2 className={styles.resaleHeaderText}>
+              {selectedResaleGift.title}
+            </h2>
+            {isFirstLoading
+              && (
+                <div className={styles.resaleHeaderDescription}>
+                  {lang('Loading')}
+                </div>
+              )}
+            {!isFirstLoading && resaleGiftsCount !== undefined
+              && (
+                <div className={styles.resaleHeaderDescription}>
+                  {lang('HeaderDescriptionResaleGifts', {
+                    count: resaleGiftsCount,
+                  }, { withNodes: true, withMarkdown: true, pluralValue: resaleGiftsCount })}
+                </div>
+              )}
+          </div>
           <GiftResaleFilters dialogRef={dialogRef} />
         </div>
       );
@@ -555,6 +556,7 @@ const GiftModal: FC<OwnProps & StateProps> = ({
       contentClassName={styles.content}
       className={buildClassName(styles.modalDialog, styles.root)}
       isLowStackPriority
+      withBalanceBar
     >
       <Button
         className={styles.closeButton}
@@ -566,12 +568,11 @@ const GiftModal: FC<OwnProps & StateProps> = ({
       >
         <div className={buttonClassName} />
       </Button>
-      <BalanceBlock className={styles.balance} balance={starBalance} withAddButton />
       <div className={buildClassName(
         styles.header,
         isResaleScreen && styles.resaleHeader,
         !shouldShowHeader && styles.hiddenHeader,
-        isCategoryListPinned && styles.noBorder)}
+        isCategoryListPinned && !isResaleScreen && styles.noBorder)}
       >
         <Transition
           name="slideVerticalFade"

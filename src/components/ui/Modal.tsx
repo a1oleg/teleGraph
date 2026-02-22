@@ -208,14 +208,14 @@ const Modal: FC<OwnProps> = ({
         tabIndex={-1}
         role="dialog"
       >
-        {withBalanceBar && (
-          <ModalStarBalanceBar
-            isModalOpen={isOpen}
-            currency={currencyInBalanceBar}
-          />
-        )}
         <div className="modal-container">
           <div className="modal-backdrop" onClick={!noBackdropClose ? onClose : undefined} />
+          {withBalanceBar && (
+            <ModalStarBalanceBar
+              isModalOpen={isOpen}
+              currency={currencyInBalanceBar}
+            />
+          )}
           <div className={modalDialogClassName} ref={actualDialogRef} style={dialogStyle}>
             {renderHeader()}
             {Boolean(moreMenuItems) && (
