@@ -237,13 +237,14 @@ addActionHandler('openChat', (global, actions, payload): ActionReturnType => {
   }
 
   const chat = selectChat(global, id);
+  const threadInfo = selectThreadInfo(global, id, MAIN_THREAD_ID);
   const chatReadState = selectThreadReadState(global, id, MAIN_THREAD_ID);
 
   if (chatReadState?.hasUnreadMark) {
     actions.markChatRead({ id });
   }
 
-  const isChatOnlySummary = !selectChatLastMessageId(global, id);
+  const isChatOnlySummary = !threadInfo || !selectChatLastMessageId(global, id);
 
   if (!chat) {
     if (selectIsChatWithSelf(global, id)) {
