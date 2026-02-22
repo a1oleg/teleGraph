@@ -749,6 +749,7 @@ export interface ApiAvailableReaction {
   title: string;
   isInactive?: boolean;
   isPremium?: boolean;
+  isLocalCache?: true;
 }
 
 export interface ApiAvailableEffect {

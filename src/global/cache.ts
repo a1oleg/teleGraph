@@ -830,5 +830,5 @@ function reduceGroupCalls<T extends GlobalState>(global: T): GlobalState['groupC
 
 function reduceAvailableReactions(availableReactions?: ApiAvailableReaction[]): ApiAvailableReaction[] | undefined {
   return availableReactions
-    ?.map((r) => pick(r, ['reaction', 'staticIcon', 'title', 'isInactive']));
+    ?.map((r) => ({ ...pick(r, ['reaction', 'staticIcon', 'title', 'isInactive']), isLocalCache: true }));
 }
