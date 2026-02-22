@@ -1,12 +1,12 @@
 import type { ElementRef } from '../../../../lib/teact/teact';
-import { useLayoutEffect, useRef } from '../../../../lib/teact/teact';
+import { useLayoutEffect } from '../../../../lib/teact/teact';
 import { addExtraClass } from '../../../../lib/teact/teact-dom';
 
 import type { FocusDirection, ScrollTargetPosition } from '../../../../types';
 
 import { SCROLL_MAX_DISTANCE } from '../../../../config';
 import {
-  requestForcedReflow, requestMeasure, requestMutation,
+  requestMeasure, requestMutation,
 } from '../../../../lib/fasterdom/fasterdom';
 import animateScroll from '../../../../util/animateScroll';
 import { REM } from '../../../common/helpers/mediaDimensions';
@@ -36,12 +36,7 @@ export default function useFocusMessageListElement({
   isQuote?: boolean;
   scrollTargetPosition?: ScrollTargetPosition;
 }) {
-  const isRelocatedRef = useRef(!isJustAdded);
-
   useLayoutEffect(() => {
-    const isRelocated = isRelocatedRef.current;
-    isRelocatedRef.current = false;
-
     if (isFocused && elementRef.current) {
       const messagesContainer = elementRef.current.closest<HTMLDivElement>('.MessageList');
       if (!messagesContainer) return;
@@ -77,14 +72,9 @@ export default function useFocusMessageListElement({
         return result;
       };
 
-      if (isRelocated) {
-        // We need this to override scroll setting from Message List layout effect
-        requestForcedReflow(exec);
-      } else {
-        requestMeasure(() => {
-          requestMutation(exec()!);
-        });
-      }
+      requestMeasure(() => {
+        requestMutation(exec()!);
+      });
     }
   }, [
     elementRef, isFocused, focusDirection, noFocusHighlight, isResizingContainer, isQuote, scrollTargetPosition,
