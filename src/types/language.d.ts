@@ -1916,6 +1916,19 @@ export interface LangPair {
   'SettingsDataClearMediaCache': undefined;
   'SettingsDataClearMediaCacheDescription': undefined;
   'SettingsDataClearMediaDone': undefined;
+  'TranslateMenuCocoonLinkText': undefined;
+  'CocoonTitle': undefined;
+  'CocoonDescription': undefined;
+  'CocoonFeature1Title': undefined;
+  'CocoonFeature1Username': undefined;
+  'CocoonFeature1UsernameLink': undefined;
+  'CocoonFeature2Title': undefined;
+  'CocoonFeature2Text': undefined;
+  'CocoonFeature3Title': undefined;
+  'CocoonFeature3LinkText': undefined;
+  'CocoonFeature3Link': undefined;
+  'CocoonFooterLinkText': undefined;
+  'CocoonFooterLink': undefined;
   'ChatListAuctionWinning': undefined;
   'ChatListAuctionOutbid': undefined;
   'ChatListAuctionView': undefined;
@@ -3359,6 +3372,18 @@ export interface LangPairWithVariables<V = LangVariable> {
   'GroupStatusWithOnline': {
     'status': V;
     'onlineCount': V;
+  };
+  'TranslateMenuCocoon': {
+    'link': V;
+  };
+  'CocoonFeature1Text': {
+    'username': V;
+  };
+  'CocoonFeature3Text': {
+    'link': V;
+  };
+  'CocoonFooterText': {
+    'link': V;
   };
   'ChatListAuctionMixed': {
     'winCount': V;

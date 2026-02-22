@@ -331,6 +331,7 @@
     "payments.getStarsTransactions",
     "payments.getStarsTransactionsByID",
     "payments.getStarsSubscriptions",
+    "payments.getStarsRevenueStats",
     "payments.changeStarsSubscription",
     "payments.fulfillStarsSubscription",
     "payments.sendStarsForm",

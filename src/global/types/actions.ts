@@ -2996,6 +2996,9 @@ export interface ActionPayloads {
     chatId: string;
     messageId: number;
   };
+
+  openCocoonModal: WithTabId | undefined;
+  closeCocoonModal: WithTabId | undefined;
 }
 
 export interface RequiredActionPayloads {

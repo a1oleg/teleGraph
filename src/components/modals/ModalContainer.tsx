@@ -15,6 +15,7 @@ import BirthdaySetupModal from './birthday/BirthdaySetupModal.async';
 import BoostModal from './boost/BoostModal.async';
 import ChatInviteModal from './chatInvite/ChatInviteModal.async';
 import ChatlistModal from './chatlist/ChatlistModal.async';
+import CocoonModal from './cocoon/CocoonModal.async';
 import CollectibleInfoModal from './collectible/CollectibleInfoModal.async';
 import DeleteAccountModal from './deleteAccount/DeleteAccountModal.async';
 import EmojiStatusAccessModal from './emojiStatusAccess/EmojiStatusAccessModal.async';
@@ -130,7 +131,8 @@ type ModalKey = keyof Pick<TabState,
   'storyStealthModal' |
   'isPasskeyModalOpen' |
   'birthdaySetupModal' |
-  'isQuickChatPickerOpen'
+  'isQuickChatPickerOpen' |
+  'isCocoonModalOpen'
 >;
 
 type StateProps = {
@@ -207,6 +209,7 @@ const MODALS: ModalRegistry = {
   isPasskeyModalOpen: PasskeyModal,
   birthdaySetupModal: BirthdaySetupModal,
   isQuickChatPickerOpen: QuickChatPickerModal,
+  isCocoonModalOpen: CocoonModal,
 };
 const MODAL_KEYS = Object.keys(MODALS) as ModalKey[];
 const MODAL_ENTRIES = Object.entries(MODALS) as Entries<ModalRegistry>;

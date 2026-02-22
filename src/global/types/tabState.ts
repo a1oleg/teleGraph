@@ -975,4 +975,6 @@ export type TabState = {
   isWaitingForStarGiftTransfer?: true;
   insertingPeerIdMention?: string;
   shouldSaveAttachmentsCompression?: boolean;
+
+  isCocoonModalOpen?: boolean;
 };

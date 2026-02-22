@@ -108,3 +108,4 @@ export { default as ProfileRatingModal } from '../components/modals/profileRatin
 export { default as QuickPreviewModal } from '../components/modals/quickPreview/QuickPreviewModal';
 export { default as StealthModeModal } from '../components/modals/storyStealthMode/StealthModeModal';
 export { default as QuickChatPickerModal } from '../components/modals/quickChatPicker/QuickChatPickerModal';
+export { default as CocoonModal } from '../components/modals/cocoon/CocoonModal';
