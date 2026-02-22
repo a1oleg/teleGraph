@@ -100,6 +100,7 @@ async function extractJson(tgsUrl: string) {
     return '';
   }
 
+  // Prefer native gzip decompression over library. This use case has ~same speed
   const decompressionStream = response.body.pipeThrough(new DecompressionStream('gzip'));
   const result = await new Response(decompressionStream).text();
   return result;
