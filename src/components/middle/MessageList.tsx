@@ -13,7 +13,7 @@ import {
   MESSAGE_LIST_SLICE,
   SERVICE_NOTIFICATIONS_USER_ID,
 } from '../../config';
-import { forceMeasure, requestForcedReflow, requestMeasure, requestMutation } from '../../lib/fasterdom/fasterdom';
+import { forceMeasure, requestMeasure, requestMutation } from '../../lib/fasterdom/fasterdom';
 import {
   getIsSavedDialog,
   getMessageHtmlId,
@@ -66,6 +66,7 @@ import { debounce, onTickEnd } from '../../util/schedulers';
 import getOffsetToContainer from '../../util/visibility/getOffsetToContainer';
 import { REM } from '../common/helpers/mediaDimensions';
 import { groupMessages } from './helpers/groupMessages';
+import { requestMessageListReflow } from './helpers/messageListReflow';
 import { preventMessageInputBlur } from './helpers/preventMessageInputBlur';
 
 import useInterval from '../../hooks/schedulers/useInterval';
@@ -677,7 +678,7 @@ const MessageList = ({
       }, MESSAGE_ANIMATION_DURATION);
     }
 
-    requestForcedReflow(() => {
+    requestMessageListReflow(() => {
       const { scrollTop, scrollHeight, offsetHeight } = container;
       const scrollOffset = scrollOffsetRef.current;
 
