@@ -140,7 +140,7 @@ export function updateLinkedThreadInfo<T extends GlobalState>(
     return global;
   }
 
-  const valuesToUpdate = pick(update, ['messagesCount', 'lastMessageId', 'recentReplierIds']);
+  const valuesToUpdate = pick(update, ['messagesCount', 'lastMessageId']);
   const newThreadInfo: ApiThreadInfo = {
     ...threadInfo,
     ...valuesToUpdate,

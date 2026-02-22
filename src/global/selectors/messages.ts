@@ -783,6 +783,11 @@ export function selectRealLastReadId<T extends GlobalState>(global: T, chatId: s
 
   // `lastReadInboxMessageId` is empty for new chats
   if (!readState.lastReadInboxMessageId) {
+    // For new comments, mark thread start as the last read
+    if (threadId !== MAIN_THREAD_ID && readState.unreadCount && typeof threadId === 'number') {
+      return threadId;
+    }
+
     return undefined;
   }
 

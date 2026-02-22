@@ -2,7 +2,6 @@ import { memo, useMemo } from '../../../lib/teact/teact';
 import { getActions, getGlobal } from '../../../global';
 
 import type { ApiCommentsInfo } from '../../../api/types';
-import type { ThreadReadState } from '../../../types';
 
 import { selectIsCurrentUserFrozen, selectPeer } from '../../../global/selectors';
 import buildClassName from '../../../util/buildClassName';
@@ -22,7 +21,6 @@ import './CommentButton.scss';
 
 type OwnProps = {
   threadInfo?: ApiCommentsInfo;
-  threadReadState?: ThreadReadState;
   disabled?: boolean;
   isLoading?: boolean;
   isCustomShape?: boolean;
@@ -33,7 +31,6 @@ const SHOW_LOADER_DELAY = 450;
 const CommentButton = ({
   isCustomShape,
   threadInfo,
-  threadReadState,
   disabled,
   isLoading,
 }: OwnProps) => {
@@ -44,9 +41,8 @@ const CommentButton = ({
   const oldLang = useOldLang();
   const lang = useLang();
   const {
-    originMessageId, chatId, messagesCount, lastMessageId, recentReplierIds, originChannelId,
+    originMessageId, chatId, messagesCount, recentReplierIds, originChannelId, hasUnread,
   } = threadInfo || {};
-  const { lastReadInboxMessageId } = threadReadState || {};
 
   const handleClick = useLastCallback(() => {
     const global = getGlobal();
@@ -92,8 +88,6 @@ const CommentButton = ({
       )
     );
   }
-
-  const hasUnread = Boolean(lastReadInboxMessageId && lastMessageId && lastReadInboxMessageId < lastMessageId);
 
   const commentsText = messagesCount ? (oldLang('CommentsCount', '%COMMENTS_COUNT%', undefined, messagesCount))
     .split('%')

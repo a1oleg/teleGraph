@@ -422,22 +422,9 @@ addActionHandler('openThread', async (global, actions, payload): Promise<void> =
 
   global = getGlobal();
   global = addMessages(global, result.messages);
+  global = updateThreadInfo(global, result.threadInfo);
   global = updateThreadReadState(global, chatId, result.threadId, result.threadReadState);
   global = updateThreadInfoLastMessageId(global, chatId, result.threadId, result.lastMessageId);
-
-  if (isComments) {
-    const lastMessageId = threadInfo?.lastMessageId !== undefined ? threadInfo.lastMessageId
-      : threadInfo?.messagesCount === 0 ? result.threadId : undefined;
-
-    global = updateThreadInfo(global, {
-      isCommentsInfo: false,
-      threadId,
-      chatId,
-      fromChannelId: loadingChatId,
-      fromMessageId: loadingThreadId,
-      lastMessageId,
-    });
-  }
   global = replaceThreadLocalStateParam(global, chatId, threadId, 'firstMessageId', result.firstMessageId);
   setGlobal(global);
 

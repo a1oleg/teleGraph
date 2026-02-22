@@ -239,7 +239,7 @@ const MiddleHeader: FC<OwnProps & StateProps> = ({
 
     return (
       <>
-        {renderBackButton()}
+        {renderBackButton(currentTransitionKey === 0)}
         <h3>
           {messagesCount !== undefined ? (
             messageListType === 'thread' ? (

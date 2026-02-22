@@ -41,7 +41,7 @@ import {
   updateFocusedMessage,
 } from '../../reducers';
 import { updateTabState } from '../../reducers/tabs';
-import { replaceTabThreadParam, replaceThreadLocalStateParam } from '../../reducers/threads';
+import { replaceTabThreadParam, replaceThreadLocalStateParam, updateThreadReadState } from '../../reducers/threads';
 import {
   selectAllowedMessageActionsSlow,
   selectCanForwardMessage,
@@ -495,6 +495,7 @@ addActionHandler('scrollMessageListToBottom', (global, actions, payload): Action
   blurTimeout = window.setTimeout(() => {
     global = getGlobal();
     global = updateFocusedMessage(global, undefined, tabId);
+    global = updateThreadReadState(global, chatId, threadId, { unreadCount: 0 });
     setGlobal(global);
   }, FOCUS_NO_HIGHLIGHT_DURATION);
 

@@ -23,7 +23,12 @@ import {
   updateUsers,
 } from '../../reducers';
 import { updateTabState } from '../../reducers/tabs';
-import { updateThreadInfo, updateThreadLocalState } from '../../reducers/threads';
+import {
+  replaceThreadLocalStateParam,
+  updateThreadInfo,
+  updateThreadLocalState,
+  updateThreadReadState,
+} from '../../reducers/threads';
 import {
   selectChat,
   selectChatMessage,
@@ -179,6 +184,14 @@ async function loadAndReplaceMessages<T extends GlobalState>(global: T, actions:
         }
 
         global = addChatMessagesById(global, currentChatId, byId);
+        if (resultDiscussion) {
+          global = updateThreadInfo(global, resultDiscussion.threadInfo);
+          global = updateThreadReadState(global, currentChatId, activeThreadId, resultDiscussion.threadReadState);
+          global = replaceThreadLocalStateParam(
+            global, currentChatId, activeThreadId, 'firstMessageId', resultDiscussion.firstMessageId,
+          );
+          global = addChatMessagesById(global, currentChatId, buildCollectionByKey(resultDiscussion.topMessages, 'id'));
+        }
         global = updateListedIds(global, currentChatId, activeThreadId, listedIds);
 
         Object.entries(messagesThreads).forEach(([id, thread]) => {

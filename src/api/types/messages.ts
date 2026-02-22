@@ -826,6 +826,7 @@ export interface ApiCommentsInfo extends ApiBaseThreadInfo {
   threadId?: never;
   originChannelId: string;
   originMessageId: number;
+  hasUnread?: boolean;
 }
 
 export interface ApiMessageThreadInfo extends ApiBaseThreadInfo {

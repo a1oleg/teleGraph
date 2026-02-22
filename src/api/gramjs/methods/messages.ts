@@ -74,6 +74,7 @@ import {
   buildApiSearchPostsFlood,
   buildApiSponsoredMessage,
   buildApiThreadInfo,
+  buildApiThreadInfoFromMessage,
   buildLocalForwardedMessage,
   buildLocalMessage,
   buildPreparedInlineMessage,
@@ -1383,7 +1384,7 @@ export async function fetchMessageViews({
       id,
       views,
       forwards,
-      threadInfo: replies ? buildApiThreadInfo(replies, id, chat.id) : undefined,
+      threadInfo: replies ? buildApiThreadInfo(chat.id, id, replies) : undefined,
     };
   });
 
@@ -1456,16 +1457,23 @@ export async function fetchDiscussionMessage({
   const messages = topMessages.concat(replies.messages);
   const threadId = result.messages[result.messages.length - 1]?.id;
 
-  if (!threadId) return undefined;
+  const chatId = topMessages[0]?.chatId;
+  if (!chatId || !threadId) return undefined;
 
   const { maxId } = result;
   const threadReadState = buildThreadReadState(result);
+
+  const topMessageWithReplies = result.messages.find((message): message is GramJs.Message => (
+    message instanceof GramJs.Message && Boolean(message.replies)
+  ))!;
+  const threadInfo = buildApiThreadInfoFromMessage(topMessageWithReplies);
 
   return {
     messages,
     topMessages,
     threadId,
     threadReadState,
+    threadInfo,
     lastMessageId: maxId,
     chatId: topMessages[0]?.chatId,
     firstMessageId: replies.messages[0]?.id,

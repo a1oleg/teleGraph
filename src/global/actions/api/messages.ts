@@ -247,6 +247,13 @@ addActionHandler('loadViewportMessages', (global, actions, payload): ActionRetur
     // Prevent unnecessary requests in threads
     if (offsetId === threadId && direction === LoadMoreDirection.Backwards) return;
 
+    if (direction === LoadMoreDirection.Forwards && offsetId) {
+      const threadInfo = selectThreadInfo(global, chatId, threadId);
+      if (threadInfo?.lastMessageId && offsetId >= threadInfo.lastMessageId) {
+        return;
+      }
+    }
+
     const isOutlying = Boolean(listedIds && offsetId && !listedIds.includes(offsetId));
     const historyIds = (isOutlying
       ? selectOutlyingListByMessageId(global, chatId, threadId, offsetId!) : listedIds)!;
