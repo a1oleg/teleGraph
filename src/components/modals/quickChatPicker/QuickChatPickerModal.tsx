@@ -19,7 +19,7 @@ const QuickChatPickerModal = ({
   const isOpen = Boolean(modal);
 
   const handleSelectRecipient = useLastCallback((peerId: string) => {
-    openChat({ id: peerId });
+    openChat({ id: peerId, shouldReplaceHistory: true });
     closeQuickChatPicker();
   });
 
