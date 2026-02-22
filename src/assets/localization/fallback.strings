@@ -1569,6 +1569,9 @@
 "GiftAttributeModel" = "Model";
 "GiftAttributeBackdrop" = "Backdrop";
 "GiftAttributeSymbol" = "Symbol";
+"GiftRarityRare" = "Rare";
+"GiftRarityEpic" = "Epic";
+"GiftRarityLegendary" = "Legendary";
 "GiftInfoPeerOriginalInfo" = "Gifted to {peer} on {date}.";
 "GiftInfoPeerOriginalInfoSender" = "Gifted by {sender} to {peer} on {date}.";
 "GiftInfoPeerOriginalInfoText" = "Gifted to {peer} on {date} with comment \"{text}\".";

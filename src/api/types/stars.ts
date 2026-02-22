@@ -65,18 +65,29 @@ export interface ApiStarGiftUnique {
 
 export type ApiStarGift = ApiStarGiftRegular | ApiStarGiftUnique;
 
+interface ApiStarGiftAttributeRarityUncommon {
+  type: 'rare' | 'epic' | 'legendary';
+}
+
+interface ApiStarGiftAttributeRarityRegular {
+  type: 'regular';
+  rarityPercent: number;
+}
+
+export type ApiStarGiftAttributeRarity = ApiStarGiftAttributeRarityRegular | ApiStarGiftAttributeRarityUncommon;
+
 export interface ApiStarGiftAttributeModel {
   type: 'model';
   name: string;
-  rarityPercent: number;
   sticker: ApiSticker;
+  rarity: ApiStarGiftAttributeRarity;
 }
 
 export interface ApiStarGiftAttributePattern {
   type: 'pattern';
   name: string;
-  rarityPercent: number;
   sticker: ApiSticker;
+  rarity: ApiStarGiftAttributeRarity;
 }
 
 export interface ApiStarGiftAttributeBackdrop {
@@ -87,7 +98,7 @@ export interface ApiStarGiftAttributeBackdrop {
   edgeColor: string;
   patternColor: string;
   textColor: string;
-  rarityPercent: number;
+  rarity: ApiStarGiftAttributeRarity;
 }
 
 export interface ApiStarGiftAttributeOriginalDetails {

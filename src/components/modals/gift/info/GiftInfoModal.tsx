@@ -22,9 +22,8 @@ import {
 } from '../../../../util/localization/format';
 import { CUSTOM_PEER_HIDDEN } from '../../../../util/objects/customPeer';
 import { getServerTime } from '../../../../util/serverTime';
-import { formatPercent } from '../../../../util/textFormat';
 import { renderGiftOriginalInfo } from '../../../common/helpers/giftOriginalInfo';
-import { getGiftAttributes, getStickerFromGift } from '../../../common/helpers/gifts';
+import { getGiftAttributes, getGiftRarityTitle, getStickerFromGift } from '../../../common/helpers/gifts';
 import { renderTextWithEntities } from '../../../common/helpers/renderTextWithEntities';
 
 import useCurrentOrPrev from '../../../../hooks/useCurrentOrPrev';
@@ -699,7 +698,7 @@ const GiftInfoModal = ({
             >
               {model.name}
             </span>
-            <BadgeButton>{formatPercent(model.rarityPercent)}</BadgeButton>
+            <BadgeButton>{getGiftRarityTitle(lang, model.rarity)}</BadgeButton>
           </span>,
         ]);
       }
@@ -714,7 +713,7 @@ const GiftInfoModal = ({
             >
               {backdrop.name}
             </span>
-            <BadgeButton>{formatPercent(backdrop.rarityPercent)}</BadgeButton>
+            <BadgeButton>{getGiftRarityTitle(lang, backdrop.rarity)}</BadgeButton>
           </span>,
         ]);
       }
@@ -729,7 +728,7 @@ const GiftInfoModal = ({
             >
               {pattern.name}
             </span>
-            <BadgeButton>{formatPercent(pattern.rarityPercent)}</BadgeButton>
+            <BadgeButton>{getGiftRarityTitle(lang, pattern.rarity)}</BadgeButton>
           </span>,
         ]);
       }

@@ -9,6 +9,7 @@ import type {
   ApiStarGiftAttribute,
   ApiStarGiftAttributeCounter,
   ApiStarGiftAttributeId,
+  ApiStarGiftAttributeRarity,
   ApiStarGiftAuctionAcquiredGift,
   ApiStarGiftAuctionState,
   ApiStarGiftAuctionUserState,
@@ -108,6 +109,22 @@ export function buildApiStarGift(starGift: GramJs.TypeStarGift): ApiStarGift {
   };
 }
 
+function buildApiStarGiftAttributeRarity(rarity: GramJs.TypeStarGiftAttributeRarity): ApiStarGiftAttributeRarity {
+  if (rarity instanceof GramJs.StarGiftAttributeRarityRare) {
+    return { type: 'rare' };
+  }
+
+  if (rarity instanceof GramJs.StarGiftAttributeRarityEpic) {
+    return { type: 'epic' };
+  }
+
+  if (rarity instanceof GramJs.StarGiftAttributeRarityLegendary) {
+    return { type: 'legendary' };
+  }
+
+  return { type: 'regular', rarityPercent: rarity.permille / 10 };
+}
+
 export function buildApiStarGiftAttribute(attribute: GramJs.TypeStarGiftAttribute): ApiStarGiftAttribute | undefined {
   if (attribute instanceof GramJs.StarGiftAttributeModel) {
     const sticker = buildStickerFromDocument(attribute.document);
@@ -120,8 +137,8 @@ export function buildApiStarGiftAttribute(attribute: GramJs.TypeStarGiftAttribut
     return {
       type: 'model',
       name: attribute.name,
-      rarityPercent: attribute.rarityPermille / 10,
       sticker,
+      rarity: buildApiStarGiftAttributeRarity(attribute.rarity),
     };
   }
 
@@ -136,25 +153,25 @@ export function buildApiStarGiftAttribute(attribute: GramJs.TypeStarGiftAttribut
     return {
       type: 'pattern',
       name: attribute.name,
-      rarityPercent: attribute.rarityPermille / 10,
       sticker,
+      rarity: buildApiStarGiftAttributeRarity(attribute.rarity),
     };
   }
 
   if (attribute instanceof GramJs.StarGiftAttributeBackdrop) {
     const {
-      name, rarityPermille, centerColor, edgeColor, patternColor, textColor, backdropId,
+      name, rarity, centerColor, edgeColor, patternColor, textColor, backdropId,
     } = attribute;
 
     return {
       type: 'backdrop',
       backdropId,
       name,
-      rarityPercent: rarityPermille / 10,
       centerColor: int2hex(centerColor),
       edgeColor: int2hex(edgeColor),
       patternColor: int2hex(patternColor),
       textColor: int2hex(textColor),
+      rarity: buildApiStarGiftAttributeRarity(rarity),
     };
   }
 

@@ -7,10 +7,12 @@ import type {
   ApiStarGiftAttributePattern,
   ApiSticker,
 } from '../../../api/types';
+import type { LangFn } from '../../../util/localization';
 import { ApiMediaFormat } from '../../../api/types';
 
 import { getStickerMediaHash } from '../../../global/helpers';
 import { fetch } from '../../../util/mediaLoader';
+import { formatPercent } from '../../../util/textFormat';
 
 export type GiftAttributes = {
   model?: ApiStarGiftAttributeModel;
@@ -118,4 +120,27 @@ export function preloadGiftAttributeStickers(attributes: ApiStarGiftAttribute[])
   mediaHashes.forEach((hash) => {
     fetch(hash, ApiMediaFormat.BlobUrl);
   });
+}
+
+export function getGiftRarityTitle(
+  lang: LangFn,
+  rarity: ApiStarGiftAttributeModel['rarity'],
+) {
+  if (rarity.type === 'rare') {
+    return lang('GiftRarityRare');
+  }
+
+  if (rarity.type === 'epic') {
+    return lang('GiftRarityEpic');
+  }
+
+  if (rarity.type === 'legendary') {
+    return lang('GiftRarityLegendary');
+  }
+
+  if (rarity.type === 'regular') {
+    return formatPercent(rarity.rarityPercent);
+  }
+
+  return undefined;
 }

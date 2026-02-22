@@ -1305,6 +1305,9 @@ export interface LangPair {
   'GiftAttributeModel': undefined;
   'GiftAttributeBackdrop': undefined;
   'GiftAttributeSymbol': undefined;
+  'GiftRarityRare': undefined;
+  'GiftRarityEpic': undefined;
+  'GiftRarityLegendary': undefined;
   'GiftInfoStatus': undefined;
   'GiftInfoStatusNonUnique': undefined;
   'GiftInfoViewUpgraded': undefined;
