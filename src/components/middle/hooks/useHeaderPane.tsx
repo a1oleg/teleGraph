@@ -149,7 +149,7 @@ export function applyAnimationState({
 
     const apply = () => {
       setExtraStyles(element, {
-        transform: `translateY(${state.isOpen ? shiftPx : `calc(${shiftPx} - 100%)`})`,
+        transform: `translateY(${state.isOpen ? shiftPx : `calc(${shiftPx} - 100% - 0.5rem)`})`,
         zIndex: String(-i),
         transition: noTransition ? 'none' : '',
       });

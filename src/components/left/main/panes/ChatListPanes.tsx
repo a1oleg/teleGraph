@@ -6,7 +6,7 @@ import type { ApiPromoData, ApiSession } from '../../../../api/types';
 
 import { FRESH_AUTH_PERIOD } from '../../../../config';
 import { requestMutation } from '../../../../lib/fasterdom/fasterdom';
-import { selectIsCurrentUserFrozen } from '../../../../global/selectors';
+import { selectIsCurrentUserFrozen, selectIsForumPanelOpen } from '../../../../global/selectors';
 import buildClassName from '../../../../util/buildClassName';
 import { getServerTime } from '../../../../util/serverTime';
 import { REM } from '../../../common/helpers/mediaDimensions';
@@ -32,11 +32,11 @@ type StateProps = {
   sessions: Record<string, ApiSession>;
   promoData?: ApiPromoData;
   isAccountFrozen?: boolean;
+  isForumPanelOpen?: boolean;
 };
 
-const TOP_MARGIN = 0.5 * REM;
 const ITEM_MARGIN = 0.25 * REM;
-const BOTTOM_MARGIN = 0.25 * REM;
+const BOTTOM_MARGIN = 0.5 * REM;
 const FALLBACK_PANE_STATE = { height: 0 };
 
 const ChatListPanes = ({
@@ -44,6 +44,7 @@ const ChatListPanes = ({
   sessions,
   promoData,
   isAccountFrozen,
+  isForumPanelOpen,
   onHeightChange,
 }: OwnProps & StateProps) => {
   const [getUnconfirmedSessionHeight, setUnconfirmedSessionHeight] = useSignal<PaneState>(FALLBACK_PANE_STATE);
@@ -73,9 +74,9 @@ const ChatListPanes = ({
     return sessionsArray.find((session) => session.isUnconfirmed);
   }, [sessions]);
 
-  const canShowUnconfirmedSession = !isAccountFrozen && unconfirmedSession;
-  const canShowSuggestions = !isAccountFrozen && !unconfirmedSession && promoData;
-  const canShowGiftAuctions = !isAccountFrozen;
+  const canShowUnconfirmedSession = !isAccountFrozen && !isForumPanelOpen && unconfirmedSession;
+  const canShowSuggestions = !isAccountFrozen && !isForumPanelOpen && !unconfirmedSession && promoData;
+  const canShowGiftAuctions = !isAccountFrozen && !isForumPanelOpen;
 
   useSignalEffect(() => {
     const unconfirmedSessionHeight = getUnconfirmedSessionHeight();
@@ -85,7 +86,6 @@ const ChatListPanes = ({
 
     // Keep in sync with the order of the panes in the DOM
     const stateArray = [
-      { height: TOP_MARGIN, isSpacer: true },
       unconfirmedSessionHeight,
       frozenAccountHeight,
       giftAuctionHeight,
@@ -96,7 +96,7 @@ const ChatListPanes = ({
 
     const isFirstRender = isFirstRenderRef.current;
     const totalHeight = stateArray.reduce((acc, state) => acc + state.height, 0);
-    const panelsHeight = totalHeight - TOP_MARGIN - BOTTOM_MARGIN;
+    const panelsHeight = totalHeight - BOTTOM_MARGIN;
 
     onHeightChange(panelsHeight !== 0 ? totalHeight : 0);
 
@@ -151,6 +151,7 @@ const ChatListPanes = ({
 export default memo(withGlobal<OwnProps>(
   (global): Complete<StateProps> => {
     return {
+      isForumPanelOpen: selectIsForumPanelOpen(global),
       sessions: global.activeSessions.byHash,
       promoData: global.promoData,
       isAccountFrozen: selectIsCurrentUserFrozen(global),
