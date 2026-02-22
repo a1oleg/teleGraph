@@ -41,6 +41,7 @@ type OwnProps = {
 };
 
 const GIFT_STICKER_SIZE = 36;
+const AVATAR_SIZE = 42;
 
 const StarsTransactionItem = ({ transaction, className }: OwnProps) => {
   const { openStarsTransactionModal } = getActions();
@@ -157,7 +158,7 @@ const StarsTransactionItem = ({ transaction, className }: OwnProps) => {
 
     return (
       <>
-        <Avatar size="medium" webPhoto={photo} peer={data.avatarPeer} />
+        <Avatar size={AVATAR_SIZE} webPhoto={photo} peer={data.avatarPeer} />
         {Boolean(subscriptionPeriod) && (
           <StarIcon className={styles.subscriptionStar} type="gold" size="small" />
         )}
