@@ -31,12 +31,6 @@
   align-items: flex-end;
   margin-bottom: 0.375rem;
 
-  #Main.folders-sidebar-visible & {
-    @media (max-width: 1440px) {
-      --max-width: 24rem;
-    }
-  }
-
   .theme-dark & {
     --color-reaction: rgb(255, 255, 255, 0.1);
     --hover-color-reaction: rgb(255, 255, 255, 0.2);
@@ -251,12 +245,6 @@
         --border-bottom-right-radius: 0;
 
         border-bottom-right-radius: 0;
-      }
-    }
-
-    #Main.folders-sidebar-visible & {
-      @media (min-width: 1440px) {
-        --max-width: 25rem;
       }
     }
 
