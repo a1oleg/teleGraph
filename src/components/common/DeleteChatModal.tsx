@@ -6,7 +6,6 @@ import type { ApiChat } from '../../api/types';
 
 import {
   getChatTitle,
-  getPrivateChatUserId,
   getUserFirstOrLastName,
   isChatBasicGroup,
   isChatChannel,
@@ -244,12 +243,10 @@ export default memo(withGlobal<OwnProps>(
   (global, { chat, isSavedDialog }): Complete<StateProps> => {
     const isPrivateChat = isUserId(chat.id);
     const isChatWithSelf = selectIsChatWithSelf(global, chat.id);
-    const user = isPrivateChat && selectUser(global, getPrivateChatUserId(chat)!);
+    const user = selectUser(global, chat.id);
     const isBot = user && isUserBot(user) && !chat.isSupport;
     const canDeleteForAll = (isPrivateChat && !isChatWithSelf && !isBot && !isSavedDialog);
-    const contactName = isPrivateChat
-      ? getUserFirstOrLastName(selectUser(global, getPrivateChatUserId(chat)!))
-      : undefined;
+    const contactName = isPrivateChat ? getUserFirstOrLastName(user) : undefined;
 
     return {
       isPrivateChat,

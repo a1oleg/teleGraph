@@ -85,13 +85,6 @@ export function getChatTypeLangKey(chat: ApiChat): RegularLangKey {
   }
 }
 
-export function getPrivateChatUserId(chat: ApiChat) {
-  if (chat.type !== 'chatTypePrivate' && chat.type !== 'chatTypeSecret') {
-    return undefined;
-  }
-  return chat.id;
-}
-
 export function getChatTitle(lang: OldLangFn | LangFn, chat: ApiChat, isSelf = false) {
   if (isSelf) {
     return lang('SavedMessages');

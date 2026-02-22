@@ -1374,7 +1374,7 @@ export function selectForwardsCanBeSentToChat<T extends GlobalState>(
   const chatMessages = selectChatMessages(global, fromChatId!);
 
   const isSavedMessages = toChatId ? selectIsChatWithSelf(global, toChatId) : undefined;
-  const isChatWithBot = toChatId ? selectIsChatWithBot(global, chat) : undefined;
+  const isChatWithBot = toChatId ? selectIsChatWithBot(global, toChatId) : undefined;
   const options = getAllowedAttachmentOptions(chat, chatFullInfo, isChatWithBot, isSavedMessages);
   return !messageIds!.some((messageId) => сheckMessageSendingDenied(chatMessages[messageId], options));
 }

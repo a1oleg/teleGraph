@@ -350,7 +350,7 @@ addActionHandler('showAllowedMessageTypesNotification', (global, actions, payloa
   if (!chat) return;
   const chatFullInfo = selectChatFullInfo(global, chatId);
   const isSavedMessages = chatId ? selectIsChatWithSelf(global, chatId) : undefined;
-  const isChatWithBot = chatId ? selectIsChatWithBot(global, chat) : undefined;
+  const isChatWithBot = chatId ? selectIsChatWithBot(global, chatId) : undefined;
 
   const {
     canSendPlainText, canSendPhotos, canSendVideos, canSendDocuments, canSendAudios,

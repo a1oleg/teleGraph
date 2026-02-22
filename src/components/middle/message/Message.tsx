@@ -48,6 +48,7 @@ import { AudioOrigin } from '../../../types';
 import { EMOJI_STATUS_LOOP_LIMIT, MESSAGE_APPEARANCE_DELAY } from '../../../config';
 import {
   areReactionsEmpty,
+  getAllowedAttachmentOptions,
   getIsDownloading,
   getMainUsername,
   getMessageContent,
@@ -88,6 +89,7 @@ import {
   selectFullWebPageFromMessage,
   selectIsChatProtected,
   selectIsChatRestricted,
+  selectIsChatWithBot,
   selectIsChatWithSelf,
   selectIsCurrentUserFrozen,
   selectIsCurrentUserPremium,
@@ -331,6 +333,7 @@ type StateProps = {
   isMediaNsfw?: boolean;
   isReplyMediaNsfw?: boolean;
   summary?: TextSummary;
+  canSendStickers?: boolean;
 };
 
 type MetaPosition =
@@ -458,6 +461,7 @@ const Message = ({
   minFutureTime,
   webPage,
   summary,
+  canSendStickers,
   observeIntersectionForBottom,
   observeIntersectionForLoading,
   observeIntersectionForPlaying,
@@ -1369,6 +1373,7 @@ const Message = ({
         )}
         {dice && (
           <DiceWrapper
+            canSendDice={canSendStickers}
             isLocal={isLocal}
             dice={dice}
             isOutgoing={isOwn}
@@ -2015,6 +2020,7 @@ export default memo(withGlobal<OwnProps>(
 
     const chat = selectChat(global, chatId);
     const isChatWithSelf = selectIsChatWithSelf(global, chatId);
+    const isChatWithBot = selectIsChatWithBot(global, chatId);
     const isSystemBotChat = isSystemBot(chatId);
     const isAnonymousForwards = isAnonymousForwardsChat(chatId);
     const isChannel = chat && isChatChannel(chat);
@@ -2144,6 +2150,8 @@ export default memo(withGlobal<OwnProps>(
 
     const summary = selectMessageSummary(global, chatId, message.id, requestedTranslationLanguage);
 
+    const allowedAttachmentOptions = getAllowedAttachmentOptions(chat, chatFullInfo, isChatWithBot);
+
     return {
       theme: selectTheme(global),
       forceSenderName,
@@ -2244,6 +2252,7 @@ export default memo(withGlobal<OwnProps>(
       isReplyMediaNsfw,
       webPage,
       summary,
+      canSendStickers: allowedAttachmentOptions.canSendStickers,
     };
   },
 )(Message));

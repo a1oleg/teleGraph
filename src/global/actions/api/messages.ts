@@ -70,6 +70,7 @@ import {
   isMessageLocal,
   isServiceNotificationMessage,
   isUserBot,
+  isUserRightBanned,
   splitMessagesForForwarding,
 } from '../../helpers';
 import { isApiPeerChat, isApiPeerUser } from '../../helpers/peers';
@@ -452,9 +453,11 @@ addActionHandler('sendMessage', async (global, actions, payload): Promise<void> 
     });
   }
 
+  const areStickersDisabled = isUserRightBanned(chat, 'sendStickers');
+
   const diceEmojies = global.appConfig.diceEmojies;
   let dice = payload.dice;
-  if (payload.text && !payload.entities?.length && diceEmojies.includes(payload.text)) {
+  if (!areStickersDisabled && payload.text && !payload.entities?.length && diceEmojies.includes(payload.text)) {
     dice = payload.text;
   }
 
