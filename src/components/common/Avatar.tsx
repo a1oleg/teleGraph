@@ -88,6 +88,7 @@ type OwnProps = {
   loopIndefinitely?: boolean;
   noPersonalPhoto?: boolean;
   asMessageBubble?: boolean;
+  storyCircleStyle?: string;
   observeIntersection?: ObserveFn;
   onClick?: (e: ReactMouseEvent<HTMLDivElement, MouseEvent>, hasMedia: boolean) => void;
   onContextMenu?: (e: React.MouseEvent) => void;
@@ -118,6 +119,7 @@ const Avatar = ({
   loopIndefinitely,
   noPersonalPhoto,
   asMessageBubble,
+  storyCircleStyle,
   onClick,
   onContextMenu,
   onMouseMove,
@@ -334,6 +336,7 @@ const Avatar = ({
           size={pxSize}
           withExtraGap={withStoryGap}
           colors={storyColors}
+          style={storyCircleStyle}
         />
       )}
     </div>

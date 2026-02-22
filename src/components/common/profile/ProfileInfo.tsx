@@ -585,6 +585,7 @@ const ProfileInfo = ({
           size="jumbo"
           peer={peer}
           style={createVtnStyle('avatar', true)}
+          storyCircleStyle={createVtnStyle('avatarStoryCircle', true)}
           onClick={hasAvatar ? handleMinimizedAvatarClick : undefined}
         />
       )}

@@ -405,6 +405,10 @@
   grid-area: 1 / -1;
 
   @include mixins.with-vt-type('profileAvatar');
+
+  :global(.story-circle) {
+    @include mixins.with-vt-type('profileAvatar');
+  }
 }
 
 .activeProfilePhoto {
@@ -448,6 +452,14 @@
 
   &::view-transition-group(.photoDashes) {
     z-index: 1;
+  }
+
+  &::view-transition-group(.avatarStoryCircle) {
+    z-index: -1;
+  }
+
+  &::view-transition-group(.profileInfo) {
+    z-index: -2;
   }
 }
 
