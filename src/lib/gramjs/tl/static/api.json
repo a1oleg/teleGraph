@@ -355,6 +355,7 @@
     "payments.getStarGiftCollections",
     "payments.getStarGiftAuctionState",
     "payments.getStarGiftAuctionAcquiredGifts",
+    "payments.getStarGiftActiveAuctions",
     "payments.resolveStarGiftOffer",
     "langpack.getLangPack",
     "langpack.getStrings",

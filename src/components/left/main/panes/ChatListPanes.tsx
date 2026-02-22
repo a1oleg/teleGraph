@@ -17,6 +17,7 @@ import { useSignalEffect } from '../../../../hooks/useSignalEffect';
 import { applyAnimationState, type PaneState } from '../../../middle/hooks/useHeaderPane';
 
 import FrozenAccountPane from './FrozenAccountPane';
+import GiftAuctionPane from './GiftAuctionPane';
 import SuggestionPane from './SuggestionPane';
 import UnconfirmedSessionPane from './UnconfirmedSessionPane';
 
@@ -34,6 +35,7 @@ type StateProps = {
 };
 
 const TOP_MARGIN = 0.5 * REM;
+const ITEM_MARGIN = 0.25 * REM;
 const BOTTOM_MARGIN = 0.25 * REM;
 const FALLBACK_PANE_STATE = { height: 0 };
 
@@ -46,6 +48,7 @@ const ChatListPanes = ({
 }: OwnProps & StateProps) => {
   const [getUnconfirmedSessionHeight, setUnconfirmedSessionHeight] = useSignal<PaneState>(FALLBACK_PANE_STATE);
   const [getFrozenAccountState, setFrozenAccountState] = useSignal<PaneState>(FALLBACK_PANE_STATE);
+  const [getGiftAuctionState, setGiftAuctionState] = useSignal<PaneState>(FALLBACK_PANE_STATE);
   const [getSuggestionState, setSuggestionState] = useSignal<PaneState>(FALLBACK_PANE_STATE);
 
   const isFirstRenderRef = useRef(true);
@@ -72,20 +75,30 @@ const ChatListPanes = ({
 
   const canShowUnconfirmedSession = !isAccountFrozen && unconfirmedSession;
   const canShowSuggestions = !isAccountFrozen && !unconfirmedSession && promoData;
+  const canShowGiftAuctions = !isAccountFrozen;
 
   useSignalEffect(() => {
     const unconfirmedSessionHeight = getUnconfirmedSessionHeight();
     const frozenAccountHeight = getFrozenAccountState();
+    const giftAuctionHeight = getGiftAuctionState();
     const suggestionHeight = getSuggestionState();
 
     // Keep in sync with the order of the panes in the DOM
-    const stateArray = [unconfirmedSessionHeight, frozenAccountHeight, suggestionHeight];
+    const stateArray = [
+      { height: TOP_MARGIN, isSpacer: true },
+      unconfirmedSessionHeight,
+      frozenAccountHeight,
+      giftAuctionHeight,
+      { height: giftAuctionHeight.height ? ITEM_MARGIN : 0, isSpacer: true },
+      suggestionHeight,
+      { height: BOTTOM_MARGIN, isSpacer: true },
+    ];
 
     const isFirstRender = isFirstRenderRef.current;
-    const panelsHeight = stateArray.reduce((acc, state) => acc + state.height, 0);
-    const totalHeight = panelsHeight ? panelsHeight + BOTTOM_MARGIN : 0;
+    const totalHeight = stateArray.reduce((acc, state) => acc + state.height, 0);
+    const panelsHeight = totalHeight - TOP_MARGIN - BOTTOM_MARGIN;
 
-    onHeightChange(totalHeight);
+    onHeightChange(panelsHeight !== 0 ? totalHeight : 0);
 
     const leftColumn = document.getElementById('LeftColumn');
     if (!leftColumn) return;
@@ -93,7 +106,6 @@ const ChatListPanes = ({
     applyAnimationState({
       list: stateArray,
       noTransition: isFirstRender,
-      topMargin: TOP_MARGIN,
       zIndexIncrease: true,
     });
 
@@ -102,7 +114,7 @@ const ChatListPanes = ({
         '--chat-list-panes-height': `${totalHeight}px`,
       });
     });
-  }, [getUnconfirmedSessionHeight, getFrozenAccountState, getSuggestionState]);
+  }, [getUnconfirmedSessionHeight, getFrozenAccountState, getSuggestionState, getGiftAuctionState]);
 
   if (!shouldRender) return undefined;
 
@@ -123,6 +135,10 @@ const ChatListPanes = ({
       <UnconfirmedSessionPane
         unconfirmedSession={canShowUnconfirmedSession ? unconfirmedSession : undefined}
         onPaneStateChange={setUnconfirmedSessionHeight}
+      />
+      <GiftAuctionPane
+        canShow={canShowGiftAuctions}
+        onPaneStateChange={setGiftAuctionState}
       />
       <SuggestionPane
         promoData={canShowSuggestions ? promoData : undefined}

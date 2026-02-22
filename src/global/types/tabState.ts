@@ -937,6 +937,8 @@ export type TabState = {
     acquiredGifts?: ApiStarGiftAuctionAcquiredGift[];
   };
 
+  activeGiftAuctionsModal?: true;
+
   starGiftPriceDecreaseInfoModal?: {
     prices: ApiStarGiftUpgradePrice[];
     currentPrice: number;

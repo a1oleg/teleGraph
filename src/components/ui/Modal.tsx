@@ -45,7 +45,6 @@ export type OwnProps = {
   dialogRef?: ElementRef<HTMLDivElement>;
   isLowStackPriority?: boolean;
   dialogContent?: React.ReactNode;
-  ignoreFreeze?: boolean;
   moreMenuItems?: TeactNode;
   onClose: () => void;
   onCloseAnimationEnd?: () => void;

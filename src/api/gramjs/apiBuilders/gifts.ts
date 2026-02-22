@@ -442,7 +442,7 @@ export function buildApiStarGiftAuctionUserState(
 }
 
 export function buildApiStarGiftAuctionState(
-  result: GramJs.payments.StarGiftAuctionState,
+  result: GramJs.payments.StarGiftAuctionState | GramJs.StarGiftActiveAuctionState,
 ): ApiStarGiftAuctionState | undefined {
   const gift = buildApiStarGift(result.gift);
   if (gift.type !== 'starGift') return undefined;
@@ -454,7 +454,7 @@ export function buildApiStarGiftAuctionState(
     gift,
     state,
     userState: buildApiStarGiftAuctionUserState(result.userState),
-    timeout: result.timeout,
+    timeout: 'timeout' in result ? result.timeout : undefined,
   };
 }
 

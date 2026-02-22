@@ -2508,6 +2508,11 @@
 "GiftAuctionWonNotification" = "You won {gift} at the auction!";
 "GiftAuctionLearnMoreAboutGifts" = "Learn more about Telegram Gifts >";
 "GiftAuctionLearnMoreMenuItem" = "Learn More";
+"GiftAuctionBidPosition" = "Your bid of {amount} is ranked #{position}";
+"GiftAuctionListRaiseBid" = "Raise";
+"GiftAuctionListRound" = "Round {current} of {total}";
+"GiftAuctionActiveTitle" = "Active Auctions";
+"GiftAuctionNoActive" = "You are not participating in any auctions";
 "StarGiftInfoTitle" = "Telegram Gifts";
 "StarGiftInfoSubtitle" = "Gifts are collectible items you can trade or showcase on your profile.";
 "StarGiftInfoUniqueTitle" = "Unique";
@@ -2603,3 +2608,9 @@
 "SettingsDataClearMediaCache" = "Clear Media Cache";
 "SettingsDataClearMediaCacheDescription" = "Deletes locally cached media for this account";
 "SettingsDataClearMediaDone" = "Media cache cleared";
+"ChatListAuctionTitle_one" = "Active Auction";
+"ChatListAuctionTitle_other" = "{count} Active Auctions";
+"ChatListAuctionWinning" = "You are winning";
+"ChatListAuctionOutbid" = "You've been outbid";
+"ChatListAuctionMixed" = "You are winning in {winCount} and outbid in {outbidCount}";
+"ChatListAuctionView" = "View";

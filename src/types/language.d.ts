@@ -1844,6 +1844,9 @@ export interface LangPair {
   'GiftAuctionTapToBidMore': undefined;
   'GiftAuctionLearnMoreAboutGifts': undefined;
   'GiftAuctionLearnMoreMenuItem': undefined;
+  'GiftAuctionListRaiseBid': undefined;
+  'GiftAuctionActiveTitle': undefined;
+  'GiftAuctionNoActive': undefined;
   'StarGiftInfoTitle': undefined;
   'StarGiftInfoSubtitle': undefined;
   'StarGiftInfoUniqueTitle': undefined;
@@ -1913,6 +1916,9 @@ export interface LangPair {
   'SettingsDataClearMediaCache': undefined;
   'SettingsDataClearMediaCacheDescription': undefined;
   'SettingsDataClearMediaDone': undefined;
+  'ChatListAuctionWinning': undefined;
+  'ChatListAuctionOutbid': undefined;
+  'ChatListAuctionView': undefined;
 }
 
 export interface LangPairWithVariables<V = LangVariable> {
@@ -3312,6 +3318,14 @@ export interface LangPairWithVariables<V = LangVariable> {
   'GiftAuctionWonNotification': {
     'gift': V;
   };
+  'GiftAuctionBidPosition': {
+    'amount': V;
+    'position': V;
+  };
+  'GiftAuctionListRound': {
+    'current': V;
+    'total': V;
+  };
   'SettingsPasskeyUsedAt': {
     'date': V;
   };
@@ -3345,6 +3359,10 @@ export interface LangPairWithVariables<V = LangVariable> {
   'GroupStatusWithOnline': {
     'status': V;
     'onlineCount': V;
+  };
+  'ChatListAuctionMixed': {
+    'winCount': V;
+    'outbidCount': V;
   };
 }
 
@@ -3783,6 +3801,9 @@ export interface LangPairPluralWithVariables<V = LangVariable> {
     'count': V;
   };
   'AttachmentSendFile': {
+    'count': V;
+  };
+  'ChatListAuctionTitle': {
     'count': V;
   };
 }

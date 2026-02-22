@@ -459,6 +459,20 @@ export async function fetchStarGiftAuctionAcquiredGifts({
   };
 }
 
+export async function fetchStarGiftActiveAuctions() {
+  const result = await invokeRequest(new GramJs.payments.GetStarGiftActiveAuctions({
+    hash: DEFAULT_PRIMITIVES.BIGINT,
+  }));
+
+  if (!result || result instanceof GramJs.payments.StarGiftActiveAuctionsNotModified) {
+    return undefined;
+  }
+
+  return {
+    auctions: result.auctions.map(buildApiStarGiftAuctionState).filter(Boolean),
+  };
+}
+
 export function upgradeStarGift({
   inputSavedGift,
   shouldKeepOriginalDetails,

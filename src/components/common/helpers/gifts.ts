@@ -1,4 +1,5 @@
 import type {
+  ApiAuctionBidLevel,
   ApiStarGift,
   ApiStarGiftAttribute,
   ApiStarGiftAttributeBackdrop,
@@ -120,6 +121,19 @@ export function preloadGiftAttributeStickers(attributes: ApiStarGiftAttribute[])
   mediaHashes.forEach((hash) => {
     fetch(hash, ApiMediaFormat.BlobUrl);
   });
+}
+
+export function getBidAuctionPosition(bidAmount: number, bidDate: number, bidLevels: ApiAuctionBidLevel[]) {
+  if (!bidLevels.length) return 1;
+
+  for (const level of bidLevels) {
+    if (level.amount < bidAmount
+      || (level.amount === bidAmount && level.date >= bidDate)) {
+      return level.pos;
+    }
+  }
+
+  return bidLevels[bidLevels.length - 1].pos + 1;
 }
 
 export function getGiftRarityTitle(

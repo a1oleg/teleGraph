@@ -20,6 +20,7 @@ import DeleteAccountModal from './deleteAccount/DeleteAccountModal.async';
 import EmojiStatusAccessModal from './emojiStatusAccess/EmojiStatusAccessModal.async';
 import FrozenAccountModal from './frozenAccount/FrozenAccountModal.async';
 import AboutStarGiftModal from './gift/AboutStarGiftModal.async';
+import ActiveGiftAuctionsModal from './gift/auction/ActiveGiftAuctionsModal.async';
 import GiftAuctionAcquiredModal from './gift/auction/GiftAuctionAcquiredModal.async';
 import GiftAuctionBidModal from './gift/auction/GiftAuctionBidModal.async';
 import GiftAuctionChangeRecipientModal from './gift/auction/GiftAuctionChangeRecipientModal.async';
@@ -107,6 +108,7 @@ type ModalKey = keyof Pick<TabState,
   'giftAuctionInfoModal' |
   'giftAuctionChangeRecipientModal' |
   'giftAuctionAcquiredModal' |
+  'activeGiftAuctionsModal' |
   'starGiftPriceDecreaseInfoModal' |
   'aboutStarGiftModal' |
   'monetizationVerificationModal' |
@@ -182,6 +184,7 @@ const MODALS: ModalRegistry = {
   giftAuctionInfoModal: GiftAuctionInfoModal,
   giftAuctionChangeRecipientModal: GiftAuctionChangeRecipientModal,
   giftAuctionAcquiredModal: GiftAuctionAcquiredModal,
+  activeGiftAuctionsModal: ActiveGiftAuctionsModal,
   starGiftPriceDecreaseInfoModal: StarGiftPriceDecreaseInfoModal,
   aboutStarGiftModal: AboutStarGiftModal,
   monetizationVerificationModal: VerificationMonetizationModal,

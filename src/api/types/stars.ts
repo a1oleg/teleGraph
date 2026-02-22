@@ -387,7 +387,7 @@ export interface ApiStarGiftAuctionState {
   gift: ApiStarGiftRegular;
   state: ApiTypeStarGiftAuctionState;
   userState: ApiStarGiftAuctionUserState;
-  timeout: number;
+  timeout?: number;
 }
 
 export interface ApiStarGiftAuctionAcquiredGift {
