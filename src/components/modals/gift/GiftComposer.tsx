@@ -289,7 +289,14 @@ function GiftComposer({
           <div className={styles.description}>
             {lang('GiftPremiumDescriptionYourBalance', {
               stars: formatStarsAsIcon(lang, starBalance.amount, { className: styles.switcherStarIcon }),
-              link: <Link isPrimary onClick={handleGetMoreStars}>{lang('GetMoreStarsLinkText')}</Link>,
+              link: (
+                <Link isPrimary onClick={handleGetMoreStars}>
+                  {lang('GetMoreStarsLinkText', undefined, {
+                    withNodes: true,
+                    specialReplacement: getNextArrowReplacement(),
+                  })}
+                </Link>
+              ),
             }, {
               withNodes: true,
               withMarkdown: true,
