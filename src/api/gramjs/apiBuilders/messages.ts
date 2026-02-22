@@ -772,7 +772,7 @@ export function buildApiThreadInfo(
   messageForwardInfo?: GramJs.MessageFwdHeader,
 ): ApiThreadInfo | undefined {
   const {
-    channelId, replies, maxId, recentRepliers, comments, readMaxId,
+    channelId, replies, maxId = messageId, recentRepliers, comments, readMaxId,
   } = messageReplies;
 
   const { fromId, channelPost } = messageForwardInfo || {};
