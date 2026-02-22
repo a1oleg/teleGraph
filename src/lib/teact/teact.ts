@@ -155,6 +155,7 @@ const Fragment = Symbol('Fragment') as unknown as FC<{ children: TeactNode }>;
 const DEBUG_RENDER_THRESHOLD = 7;
 const DEBUG_EFFECT_THRESHOLD = 7;
 const DEBUG_SILENT_RENDERS_FOR = new Set(['TeactMemoWrapper', 'TeactNContainer', 'Button', 'ListItem', 'MenuItem']);
+const MAX_EFFECT_CURSORS_PER_INSTANCE = 10000;
 
 let contextCounter = 0;
 
@@ -315,11 +316,36 @@ if (DEBUG) {
 
 let instancesPendingUpdate = new Set<ComponentInstance>();
 let idsToExcludeFromUpdate = new Set<number>();
-let pendingEffects = new Map<string, Effect>();
-let pendingCleanups = new Map<string, EffectCleanup>();
-let pendingLayoutEffects = new Map<string, Effect>();
-let pendingLayoutCleanups = new Map<string, EffectCleanup>();
+let pendingEffects = new Map<number, Effect>();
+let pendingCleanups = new Map<number, EffectCleanup>();
+let pendingLayoutEffects = new Map<number, Effect>();
+let pendingLayoutCleanups = new Map<number, EffectCleanup>();
 let areImmediateEffectsCaptured = false;
+
+/*
+  Effect call order:
+  - Regular call order inside component
+  - Child to parent
+  - Parent to child on unmount
+  - Sibling behavior is not defined
+*/
+function runEffectsMap<T extends NoneToVoidFunction>(map: Map<number, T>) {
+  Array.from(map.entries())
+    .sort(([aKey], [bKey]) => {
+      const idA = Math.floor(aKey / MAX_EFFECT_CURSORS_PER_INSTANCE);
+      const idB = Math.floor(bKey / MAX_EFFECT_CURSORS_PER_INSTANCE);
+
+      const idDiff = idB - idA;
+      if (idDiff !== 0) {
+        return idDiff;
+      }
+
+      const cursorA = aKey % MAX_EFFECT_CURSORS_PER_INSTANCE;
+      const cursorB = bKey % MAX_EFFECT_CURSORS_PER_INSTANCE;
+
+      return cursorA - cursorB;
+    }).forEach(([_, cb]) => void cb());
+}
 
 /*
   Order:
@@ -350,11 +376,11 @@ const runUpdatePassOnRaf = throttleWith(requestMeasure, () => {
 
   const currentCleanups = pendingCleanups;
   pendingCleanups = new Map();
-  currentCleanups.forEach((cb) => cb());
+  runEffectsMap(currentCleanups);
 
   const currentEffects = pendingEffects;
   pendingEffects = new Map();
-  currentEffects.forEach((cb) => cb());
+  runEffectsMap(currentEffects);
 
   requestMutation(() => {
     instancesToUpdate.forEach(prepareComponentForFrame);
@@ -382,11 +408,11 @@ export function captureImmediateEffects() {
 function runCapturedImmediateEffects() {
   const currentLayoutCleanups = pendingLayoutCleanups;
   pendingLayoutCleanups = new Map();
-  currentLayoutCleanups.forEach((cb) => cb());
+  runEffectsMap(currentLayoutCleanups);
 
   const currentLayoutEffects = pendingLayoutEffects;
   pendingLayoutEffects = new Map();
-  currentLayoutEffects.forEach((cb) => cb());
+  runEffectsMap(currentLayoutEffects);
 
   areImmediateEffectsCaptured = false;
 }
@@ -738,6 +764,11 @@ function useEffectBase(
   }
 
   renderingInstance.hooks.effects.cursor++;
+
+  if (DEBUG && cursor >= MAX_EFFECT_CURSORS_PER_INSTANCE) {
+    // eslint-disable-next-line no-console
+    console.warn(`[Teact] Effect cursor #${cursor} in ${componentInstance.name} is out of bounds. How?`);
+  }
 }
 
 function scheduleEffect(
@@ -750,7 +781,7 @@ function scheduleEffect(
   const cleanup = byCursor[cursor]?.cleanup;
   const cleanupsContainer = isLayout ? pendingLayoutCleanups : pendingCleanups;
   const effectsContainer = isLayout ? pendingLayoutEffects : pendingEffects;
-  const effectId = `${componentInstance.id}_${cursor}`;
+  const effectId = componentInstance.id * MAX_EFFECT_CURSORS_PER_INSTANCE + cursor;
 
   if (cleanup) {
     const runEffectCleanup = () => safeExec(() => {
