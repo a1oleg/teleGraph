@@ -1,3 +1,5 @@
+@use "../../../styles/mixins";
+
 .root {
   display: flex;
   flex-direction: column;
@@ -16,9 +18,9 @@
   font-weight: var(--font-weight-medium);
   line-height: 1.25;
 
-  background-color: var(--action-message-bg);
+  @include mixins.action-message-bg($isModule: true);
 
-  transition: background-color 150ms, color 150ms, backdrop-filter 150ms, filter 150ms;
+  transition: background-color 150ms, color 150ms, backdrop-filter 150ms, filter 150ms, opacity 150ms;
 
   &::before {
     content: '';
@@ -38,12 +40,8 @@
   &:active,
   &:hover,
   &:focus {
+    opacity: 0.85;
     background-color: var(--action-message-bg) !important;
-    backdrop-filter: brightness(115%);
-
-    @supports not (backdrop-filter: brightness(115%)) {
-      filter: brightness(115%);
-    }
   }
 
   &:first-of-type {

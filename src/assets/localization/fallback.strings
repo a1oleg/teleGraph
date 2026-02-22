@@ -686,6 +686,7 @@
 "SettingsPerformanceComposer" = "Message Composer Animations";
 "SettingsPerformanceContextAnimation" = "Context Menu Animation";
 "SettingsPerformanceContextBlur" = "Context Menu Blur";
+"SettingsPerformanceMessageBlur" = "Message Blur";
 "SettingsPerformanceRightColumn" = "Right Column Animation";
 "SettingsPerformanceThanos" = "Dust-effect deletion";
 "SettingsPerformanceAnimatedEmoji" = "Allow Animated Emoji";
@@ -1458,7 +1459,7 @@
 "AriaMenuEnableNightMode" = "Enable night mode";
 "AriaMenuDisableNightMode" = "Disable night mode";
 "AriaSettingsEditProfilePhoto" = "Edit profile photo";
-"MenuAnimationsSwitch" = "Animations";
+"MenuUIFeaturesSwitch" = "UI Features";
 "MenuTelegramFeatures" = "Telegram Features";
 "TelegramFeaturesUsername" = "TelegramTips";
 "RemoveEffect" = "Remove effect";

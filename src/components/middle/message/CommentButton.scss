@@ -1,3 +1,5 @@
+@use "../../../styles/mixins";
+
 .CommentButton {
   --background-color: var(--color-background);
   --hover-color: var(--color-chat-hover);
@@ -66,7 +68,8 @@
     color: white;
 
     opacity: 0;
-    background-color: var(--pattern-color);
+
+    @include mixins.action-message-bg;
 
     &::after {
       content: attr(data-cnt);
@@ -84,16 +87,12 @@
     }
 
     &:hover {
-      background-color: var(--pattern-color);
-      backdrop-filter: brightness(115%);
-
-      @supports not (backdrop-filter: brightness(115%)) {
-        filter: brightness(115%);
-      }
+      opacity: 0.85;
+      background-color: var(--action-message-bg);
     }
 
     &.disabled {
-      background-color: var(--pattern-color);
+      background-color: var(--action-message-bg);
     }
 
     .Message:hover &, &.loading {

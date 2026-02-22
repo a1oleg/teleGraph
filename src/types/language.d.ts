@@ -608,6 +608,7 @@ export interface LangPair {
   'SettingsPerformanceComposer': undefined;
   'SettingsPerformanceContextAnimation': undefined;
   'SettingsPerformanceContextBlur': undefined;
+  'SettingsPerformanceMessageBlur': undefined;
   'SettingsPerformanceRightColumn': undefined;
   'SettingsPerformanceThanos': undefined;
   'SettingsPerformanceAnimatedEmoji': undefined;
@@ -1243,7 +1244,7 @@ export interface LangPair {
   'AriaMenuEnableNightMode': undefined;
   'AriaMenuDisableNightMode': undefined;
   'AriaSettingsEditProfilePhoto': undefined;
-  'MenuAnimationsSwitch': undefined;
+  'MenuUIFeaturesSwitch': undefined;
   'MenuTelegramFeatures': undefined;
   'TelegramFeaturesUsername': undefined;
   'RemoveEffect': undefined;

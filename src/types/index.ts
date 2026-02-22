@@ -103,9 +103,9 @@ export type AnimationLevel = 0 | 1 | 2;
 export type FoldersPosition = 'top' | 'left';
 export type PerformanceTypeKey = (
   'pageTransitions' | 'messageSendingAnimations' | 'mediaViewerAnimations'
-  | 'messageComposerAnimations' | 'contextMenuAnimations' | 'contextMenuBlur' | 'rightColumnAnimations'
-  | 'animatedEmoji' | 'loopAnimatedStickers' | 'reactionEffects' | 'stickerEffects' | 'autoplayGifs' | 'autoplayVideos'
-  | 'storyRibbonAnimations' | 'snapEffect'
+  | 'messageComposerAnimations' | 'contextMenuAnimations' | 'contextMenuBlur' | 'messageBlur'
+  | 'rightColumnAnimations' | 'animatedEmoji' | 'loopAnimatedStickers' | 'reactionEffects' | 'stickerEffects'
+  | 'autoplayGifs' | 'autoplayVideos' | 'storyRibbonAnimations' | 'snapEffect'
 );
 export type PerformanceType = Record<PerformanceTypeKey, boolean>;
 
