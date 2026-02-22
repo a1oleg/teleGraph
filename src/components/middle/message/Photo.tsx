@@ -263,7 +263,7 @@ const Photo = <T,>({
   );
   const style = size === 'inline' ? buildStyle(
     `height: ${height}px`,
-    `width: ${width}px`,
+    `min-width: ${width}px`,
     dimensionsStyle,
   ) : undefined;
 
