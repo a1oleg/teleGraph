@@ -16,7 +16,8 @@ body {
   Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   --font-family-monospace: "Cascadia Mono", "Roboto Mono", "Droid Sans Mono", 'SF Mono', "Menlo", "Ubuntu Mono",
   "Consolas", monospace;
-  --font-family-rounded: -ui-rounded, "Numbers Rounded", "Roboto", "Helvetica Neue", sans-serif;
+  --font-family-numbers-rounded: ui-rounded, "Numbers Rounded", "Roboto", "Helvetica Neue", sans-serif;
+  --font-family-rounded: "Nunito", "Roboto", "Helvetica Neue", sans-serif;
   --font-family-condensed: "Roboto Condensed", "Roboto", "Helvetica Neue", sans-serif;
   --font-weight-semibold: 500; // Note: Roboto is naturally quite bold, so 500 works well as default
 
@@ -69,6 +70,7 @@ html.theme-dark {
 
 body.is-ios,
 body.is-macos {
+  --font-family-rounded: ui-rounded, "Nunito", "Roboto", "Helvetica Neue", sans-serif;
   --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Roboto", "Apple Color Emoji", "Helvetica Neue",
   sans-serif;
   --font-weight-semibold: 600;

@@ -328,7 +328,9 @@ const Avatar = ({
       onMouseMove={onMouseMove}
     >
       <div className="inner">
-        {typeof content === 'string' ? renderText(content, [isBig ? 'hq_emoji' : 'emoji']) : content}
+        {typeof content === 'string'
+          ? <span className="letters">{renderText(content, [isBig ? 'hq_emoji' : 'emoji'])}</span>
+          : content}
       </div>
       {withStory && realPeer?.hasStories && (
         <AvatarStoryCircle

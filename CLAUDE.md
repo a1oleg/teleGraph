@@ -56,7 +56,7 @@ You are an expert in TypeScript, JavaScript, HTML, SCSS and Teact with deep expe
     ```scss
     // ✅ CORRECT
     font-weight: var(--font-weight-medium);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
 
     // ❌ WRONG
     font-weight: 600;
