@@ -34,13 +34,14 @@ body {
   font-family: var(--font-family);
   font-size: 16px;
   font-weight: var(--font-weight-normal);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
   color: var(--color-text);
   text-align: left;
 
   background-color: var(--color-background);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
   @media (max-width: 600px) {
     height: calc(var(--vh, 1vh) * 100);

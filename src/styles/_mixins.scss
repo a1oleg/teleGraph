@@ -245,8 +245,8 @@
     mix-blend-mode: unset;
 
     mask-image: url($path);
-    mask-position: center;
     mask-repeat: repeat;
+    mask-position: center;
     mask-size: 430px auto;
   }
 }
