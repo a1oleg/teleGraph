@@ -19,6 +19,7 @@ import { formatDateTimeToString } from '../../../../util/dates/dateFormat';
 import { formatCurrencyAsString } from '../../../../util/formatCurrency';
 import {
   formatStarsAsIcon, formatStarsAsText, formatTonAsIcon, formatTonAsText,
+  getNextArrowReplacement,
 } from '../../../../util/localization/format';
 import { CUSTOM_PEER_HIDDEN } from '../../../../util/objects/customPeer';
 import { getServerTime } from '../../../../util/serverTime';
@@ -803,7 +804,12 @@ const GiftInfoModal = ({
             {tonLink && (
               <div>
                 {lang('GiftInfoTonText', {
-                  link: <SafeLink url={tonLink} shouldSkipModal text={lang('GiftInfoTonLinkText')} />,
+                  link: (
+                    <SafeLink url={tonLink} shouldSkipModal text={lang('GiftInfoTonLinkText')}>
+                      {lang('GiftInfoTonLinkText', undefined,
+                        { withNodes: true, specialReplacement: getNextArrowReplacement() })}
+                    </SafeLink>
+                  ),
                 }, { withNodes: true })}
               </div>
             )}
@@ -812,7 +818,8 @@ const GiftInfoModal = ({
                 {lang(`GiftInfo${isTargetChat ? 'Channel' : ''}${isUnsaved ? 'Hidden' : 'Saved'}`, {
                   link: (
                     <Link isPrimary onClick={handleTriggerVisibility}>
-                      {lang(`GiftInfoSaved${isUnsaved ? 'Show' : 'Hide'}`)}
+                      {lang(`GiftInfoSaved${isUnsaved ? 'Show' : 'Hide'}`, undefined,
+                        { withNodes: true, specialReplacement: getNextArrowReplacement() })}
                     </Link>
                   ),
                 }, {

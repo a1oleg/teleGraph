@@ -8,6 +8,12 @@ import buildClassName from '../buildClassName';
 import Icon from '../../components/common/icons/Icon';
 import StarIcon from '../../components/common/icons/StarIcon';
 
+export function getNextArrowReplacement() {
+  return {
+    '>': <Icon name="next-link" className="next-arrow-icon" />,
+  };
+}
+
 export function formatStarsAsText(lang: LangFn, amount: number) {
   return lang('StarsAmountText', { amount }, { pluralValue: amount });
 }

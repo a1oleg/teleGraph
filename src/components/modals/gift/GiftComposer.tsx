@@ -19,7 +19,7 @@ import buildStyle from '../../../util/buildStyle';
 import { formatCountdown } from '../../../util/dates/dateFormat';
 import { HOUR } from '../../../util/dates/units';
 import { formatCurrency } from '../../../util/formatCurrency';
-import { formatStarsAsIcon } from '../../../util/localization/format';
+import { formatStarsAsIcon, getNextArrowReplacement } from '../../../util/localization/format';
 import { getServerTime } from '../../../util/serverTime';
 
 import useCustomBackground from '../../../hooks/useCustomBackground';
@@ -322,13 +322,24 @@ function GiftComposer({
             {isPeerUser
               ? lang('GiftMakeUniqueDescription', {
                 user: title,
-                link: <Link isPrimary onClick={handleOpenUpgradePreview}>{lang('GiftMakeUniqueLink')}</Link>,
+                link: (
+                  <Link isPrimary onClick={handleOpenUpgradePreview}>
+                    {lang('GiftMakeUniqueLink', undefined, { withNodes: true,
+                      specialReplacement: getNextArrowReplacement() })}
+                  </Link>
+                ),
               }, {
                 withNodes: true,
               })
               : lang('GiftMakeUniqueDescriptionChannel', {
                 peer: title,
-                link: <Link isPrimary onClick={handleOpenUpgradePreview}>{lang('GiftMakeUniqueLink')}</Link>,
+                link: (
+                  <Link isPrimary onClick={handleOpenUpgradePreview}>
+                    {lang('GiftMakeUniqueLink', undefined, {
+                      withNodes: true,
+                      specialReplacement: getNextArrowReplacement() })}
+                  </Link>
+                ),
               }, {
                 withNodes: true,
               })}

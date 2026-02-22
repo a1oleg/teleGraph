@@ -6,7 +6,7 @@ import type { ApiStarsAmount, ApiTonAmount } from '../../api/types';
 import { formatStarsAmount } from '../../global/helpers/payments';
 import buildClassName from '../../util/buildClassName';
 import { convertTonFromNanos, convertTonToUsd, formatCurrencyAsString } from '../../util/formatCurrency';
-import { formatStarsAsIcon, formatTonAsIcon } from '../../util/localization/format';
+import { formatStarsAsIcon, formatTonAsIcon, getNextArrowReplacement } from '../../util/localization/format';
 
 import useIsTopmostBalanceBarModal from '../../hooks/element/useIsTopmostBalanceBarModal';
 import useLang from '../../hooks/useLang';
@@ -103,7 +103,10 @@ function ModalStarBalanceBar({
         )}
         {!isTonMode && (
           <Link className={styles.getMoreStarsLink} isPrimary onClick={handleGetMoreStars}>
-            {lang('GetMoreStarsLinkText')}
+            {lang('GetMoreStarsLinkText', undefined, {
+              withNodes: true,
+              specialReplacement: getNextArrowReplacement(),
+            })}
           </Link>
         )}
       </div>
