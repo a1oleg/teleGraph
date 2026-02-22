@@ -1,5 +1,6 @@
 import {
-  memo, useEffect, useMemo, useRef, useUnmountCleanup,
+  memo, useEffect, useMemo, useRef,
+  useUnmountCleanup,
 } from '../../../lib/teact/teact';
 import { getActions, withGlobal } from '../../../global';
 
@@ -51,7 +52,6 @@ import { type ObserveFn, useOnIntersect } from '../../../hooks/useIntersectionOb
 import useLang from '../../../hooks/useLang';
 import useLastCallback from '../../../hooks/useLastCallback';
 import useShowTransition from '../../../hooks/useShowTransition';
-import { type OnIntersectPinnedMessage } from '../hooks/usePinnedMessage';
 import useFluidBackgroundFilter from './hooks/useFluidBackgroundFilter';
 import useFocusMessageListElement from './hooks/useFocusMessageListElement';
 
@@ -82,10 +82,10 @@ type OwnProps = {
   isLastInList?: boolean;
   memoFirstUnreadIdRef?: { current: number | undefined };
   getIsMessageListReady?: Signal<boolean>;
-  onIntersectPinnedMessage?: OnIntersectPinnedMessage;
   observeIntersectionForBottom?: ObserveFn;
   observeIntersectionForLoading?: ObserveFn;
   observeIntersectionForPlaying?: ObserveFn;
+  onMessageUnmount?: (messageId: number) => void;
 };
 
 type StateProps = {
@@ -138,10 +138,10 @@ const ActionMessage = ({
   isResizingContainer,
   scrollTargetPosition,
   isAccountFrozen,
-  onIntersectPinnedMessage,
   observeIntersectionForBottom,
   observeIntersectionForLoading,
   observeIntersectionForPlaying,
+  onMessageUnmount,
 }: OwnProps & StateProps) => {
   const {
     requestConfetti,
@@ -249,12 +249,6 @@ const ActionMessage = ({
     scrollTargetPosition,
   });
 
-  useUnmountCleanup(() => {
-    if (message.isPinned) {
-      onIntersectPinnedMessage?.({ viewportPinnedIdsToRemove: [message.id] });
-    }
-  });
-
   const {
     isContextMenuOpen, contextMenuAnchor,
     handleBeforeContextMenu, handleContextMenu,
@@ -289,6 +283,10 @@ const ActionMessage = ({
     noCloseTransition: true,
     className: false,
     ref,
+  });
+
+  useUnmountCleanup(() => {
+    onMessageUnmount?.(id);
   });
 
   useEffect(() => {

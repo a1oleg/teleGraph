@@ -135,7 +135,16 @@ const MessageListContent = ({
     observeIntersectionForReading,
     observeIntersectionForLoading,
     observeIntersectionForPlaying,
-  } = useMessageObservers(type, containerRef, memoFirstUnreadIdRef, onIntersectPinnedMessage, chatId, isQuickPreview);
+    onMessageUnmount,
+  } = useMessageObservers({
+    type,
+    containerRef,
+    memoFirstUnreadIdRef,
+    chatId,
+    threadId,
+    isQuickPreview,
+    onIntersectPinnedMessage,
+  });
 
   const {
     withHistoryTriggers,
@@ -304,7 +313,7 @@ const MessageListContent = ({
             isJustAdded={isLastInList && isNewMessage}
             isLastInList={isLastInList}
             getIsMessageListReady={getIsReady}
-            onIntersectPinnedMessage={onIntersectPinnedMessage}
+            onMessageUnmount={onMessageUnmount}
           />,
         ]);
       }
@@ -375,8 +384,8 @@ const MessageListContent = ({
             isLastInDocumentGroup={position.isLastInDocumentGroup}
             isLastInList={position.isLastInList}
             memoFirstUnreadIdRef={memoFirstUnreadIdRef}
-            onIntersectPinnedMessage={onIntersectPinnedMessage}
             getIsMessageListReady={getIsReady}
+            onMessageUnmount={onMessageUnmount}
           />,
         ]);
       }).flat();

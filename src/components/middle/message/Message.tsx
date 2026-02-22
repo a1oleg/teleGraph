@@ -42,7 +42,6 @@ import type {
   ThreadReadState,
 } from '../../../types';
 import type { Signal } from '../../../util/signals';
-import type { OnIntersectPinnedMessage } from '../hooks/usePinnedMessage';
 import { MAIN_THREAD_ID } from '../../../api/types';
 import { AudioOrigin } from '../../../types';
 
@@ -238,7 +237,7 @@ type OwnProps = {
   observeIntersectionForBottom?: ObserveFn;
   observeIntersectionForLoading?: ObserveFn;
   observeIntersectionForPlaying?: ObserveFn;
-  onIntersectPinnedMessage?: OnIntersectPinnedMessage;
+  onMessageUnmount?: (messageId: number) => void;
 } & MessagePositionProperties;
 
 type StateProps = {
@@ -353,9 +352,6 @@ const MAX_REASON_LENGTH = 200;
 
 const Message = ({
   message,
-  observeIntersectionForBottom,
-  observeIntersectionForLoading,
-  observeIntersectionForPlaying,
   album,
   noAvatars,
   withAvatar,
@@ -462,7 +458,10 @@ const Message = ({
   minFutureTime,
   webPage,
   summary,
-  onIntersectPinnedMessage,
+  observeIntersectionForBottom,
+  observeIntersectionForLoading,
+  observeIntersectionForPlaying,
+  onMessageUnmount,
 }: OwnProps & StateProps) => {
   const {
     toggleMessageSelection,
@@ -536,18 +535,15 @@ const Message = ({
     className: false,
   });
 
+  useUnmountCleanup(() => {
+    onMessageUnmount?.(messageId);
+  });
+
   const {
     id: messageId, chatId, forwardInfo, viaBotId, isTranscriptionError, factCheck,
     isTypingDraft,
   } = message;
   const hasSummary = Boolean(message.summaryLanguageCode);
-
-  useUnmountCleanup(() => {
-    if (message.isPinned) {
-      const id = album ? album.mainMessage.id : messageId;
-      onIntersectPinnedMessage?.({ viewportPinnedIdsToRemove: [id] });
-    }
-  });
 
   const isLocal = isMessageLocal(message);
   const isOwn = isOwnMessage(message);
