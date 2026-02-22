@@ -25,7 +25,6 @@ type OwnProps = {
   disabled?: boolean;
   isLoading?: boolean;
   isCustomShape?: boolean;
-  asActionButton?: boolean;
 };
 
 const SHOW_LOADER_DELAY = 450;
@@ -35,7 +34,6 @@ const CommentButton: FC<OwnProps> = ({
   threadInfo,
   disabled,
   isLoading,
-  asActionButton,
 }) => {
   const { openThread, openFrozenAccountModal } = getActions();
 
@@ -110,7 +108,6 @@ const CommentButton: FC<OwnProps> = ({
         disabled && 'disabled',
         isCustomShape && 'CommentButton-custom-shape',
         isLoading && 'loading',
-        asActionButton && 'as-action-button',
       )}
       dir={lang.isRtl ? 'rtl' : 'ltr'}
       onClick={handleClick}

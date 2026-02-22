@@ -54,9 +54,7 @@
   }
 
   .custom-shape & {
-    position: absolute;
-    right: -3rem;
-    bottom: 3rem;
+    position: relative;
 
     align-items: flex-start;
 
@@ -127,8 +125,7 @@
     }
   }
 
-  &.as-action-button {
-    position: static;
+  &.CommentButton-custom-shape {
     background-color: transparent;
 
     &::after {

@@ -1892,7 +1892,6 @@ const Message = ({
                     disabled={noComments || !commentsThreadInfo}
                     isLoading={isLoadingComments}
                     isCustomShape
-                    asActionButton
                   />
                 )}
                 {canForward && (
