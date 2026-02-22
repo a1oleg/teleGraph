@@ -111,10 +111,6 @@ declare module '*.strings' {
   export default url;
 }
 
-declare module 'pako/dist/pako_inflate' {
-  function inflate(...args: any[]): string;
-}
-
 declare module 'opus-recorder' {
   export interface IOpusRecorder extends Omit<MediaRecorder, 'start' | 'ondataavailable'> {
     // eslint-disable-next-line @typescript-eslint/no-misused-new
