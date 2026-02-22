@@ -110,6 +110,10 @@ export function buildApiStarGift(starGift: GramJs.TypeStarGift): ApiStarGift {
 }
 
 function buildApiStarGiftAttributeRarity(rarity: GramJs.TypeStarGiftAttributeRarity): ApiStarGiftAttributeRarity {
+  if (rarity instanceof GramJs.StarGiftAttributeRarityUncommon) {
+    return { type: 'uncommon' };
+  }
+
   if (rarity instanceof GramJs.StarGiftAttributeRarityRare) {
     return { type: 'rare' };
   }

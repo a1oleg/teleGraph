@@ -1569,6 +1569,7 @@
 "GiftAttributeModel" = "Model";
 "GiftAttributeBackdrop" = "Backdrop";
 "GiftAttributeSymbol" = "Symbol";
+"GiftRarityUncommon" = "Uncommon";
 "GiftRarityRare" = "Rare";
 "GiftRarityEpic" = "Epic";
 "GiftRarityLegendary" = "Legendary";
@@ -2631,3 +2632,5 @@
 "ChatListAuctionOutbid" = "You've been outbid";
 "ChatListAuctionMixed" = "You are winning in {winCount} and outbid in {outbidCount}";
 "ChatListAuctionView" = "View";
+"BotAuthSuccessTitle" = "Login Successful";
+"BotAuthSuccessText" = "You've successfully logged into **{url}**";

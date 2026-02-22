@@ -66,7 +66,7 @@ export interface ApiStarGiftUnique {
 export type ApiStarGift = ApiStarGiftRegular | ApiStarGiftUnique;
 
 interface ApiStarGiftAttributeRarityUncommon {
-  type: 'rare' | 'epic' | 'legendary';
+  type: 'uncommon' | 'rare' | 'epic' | 'legendary';
 }
 
 interface ApiStarGiftAttributeRarityRegular {

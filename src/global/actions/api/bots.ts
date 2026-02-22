@@ -1215,6 +1215,27 @@ function handleUrlAuthResult<T extends GlobalState>(
     return;
   }
 
+  if (result.type === 'accepted' && !result.url) {
+    actions.showNotification({
+      message: {
+        key: 'BotAuthSuccessText',
+        variables: {
+          url,
+        },
+        options: {
+          withMarkdown: true,
+          withNodes: true,
+        },
+      },
+      title: {
+        key: 'BotAuthSuccessTitle',
+      },
+      tabId,
+    });
+    actions.closeUrlAuthModal({ tabId });
+    return;
+  }
+
   const siteUrl = result.type === 'accepted' ? result.url : url;
   window.open(siteUrl, '_blank', 'noopener');
   actions.closeUrlAuthModal({ tabId });

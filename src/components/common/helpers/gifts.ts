@@ -140,21 +140,18 @@ export function getGiftRarityTitle(
   lang: LangFn,
   rarity: ApiStarGiftAttributeModel['rarity'],
 ) {
-  if (rarity.type === 'rare') {
-    return lang('GiftRarityRare');
+  switch (rarity.type) {
+    case 'uncommon':
+      return lang('GiftRarityUncommon');
+    case 'rare':
+      return lang('GiftRarityRare');
+    case 'epic':
+      return lang('GiftRarityEpic');
+    case 'legendary':
+      return lang('GiftRarityLegendary');
+    case 'regular':
+      return formatPercent(rarity.rarityPercent);
+    default:
+      return undefined;
   }
-
-  if (rarity.type === 'epic') {
-    return lang('GiftRarityEpic');
-  }
-
-  if (rarity.type === 'legendary') {
-    return lang('GiftRarityLegendary');
-  }
-
-  if (rarity.type === 'regular') {
-    return formatPercent(rarity.rarityPercent);
-  }
-
-  return undefined;
 }

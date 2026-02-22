@@ -1305,6 +1305,7 @@ export interface LangPair {
   'GiftAttributeModel': undefined;
   'GiftAttributeBackdrop': undefined;
   'GiftAttributeSymbol': undefined;
+  'GiftRarityUncommon': undefined;
   'GiftRarityRare': undefined;
   'GiftRarityEpic': undefined;
   'GiftRarityLegendary': undefined;
@@ -1932,6 +1933,7 @@ export interface LangPair {
   'ChatListAuctionWinning': undefined;
   'ChatListAuctionOutbid': undefined;
   'ChatListAuctionView': undefined;
+  'BotAuthSuccessTitle': undefined;
 }
 
 export interface LangPairWithVariables<V = LangVariable> {
@@ -3388,6 +3390,9 @@ export interface LangPairWithVariables<V = LangVariable> {
   'ChatListAuctionMixed': {
     'winCount': V;
     'outbidCount': V;
+  };
+  'BotAuthSuccessText': {
+    'url': V;
   };
 }
 
