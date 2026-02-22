@@ -49,6 +49,7 @@ import PasskeyModal from './passkey/PasskeyModal.async';
 import PreparedMessageModal from './preparedMessage/PreparedMessageModal.async';
 import PriceConfirmModal from './priceConfirm/PriceConfirmModal.async';
 import ProfileRatingModal from './profileRating/ProfileRatingModal.async';
+import QuickChatPickerModal from './quickChatPicker/QuickChatPickerModal.async';
 import QuickPreviewModal from './quickPreview/QuickPreviewModal.async';
 import ReportAdModal from './reportAd/ReportAdModal.async';
 import ReportModal from './reportModal/ReportModal.async';
@@ -126,7 +127,8 @@ type ModalKey = keyof Pick<TabState,
   'quickPreview' |
   'storyStealthModal' |
   'isPasskeyModalOpen' |
-  'birthdaySetupModal'
+  'birthdaySetupModal' |
+  'isQuickChatPickerOpen'
 >;
 
 type StateProps = {
@@ -201,6 +203,7 @@ const MODALS: ModalRegistry = {
   storyStealthModal: StealthModeModal,
   isPasskeyModalOpen: PasskeyModal,
   birthdaySetupModal: BirthdaySetupModal,
+  isQuickChatPickerOpen: QuickChatPickerModal,
 };
 const MODAL_KEYS = Object.keys(MODALS) as ModalKey[];
 const MODAL_ENTRIES = Object.entries(MODALS) as Entries<ModalRegistry>;

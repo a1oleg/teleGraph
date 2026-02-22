@@ -107,3 +107,4 @@ export { default as FrozenAccountModal } from '../components/modals/frozenAccoun
 export { default as ProfileRatingModal } from '../components/modals/profileRating/ProfileRatingModal';
 export { default as QuickPreviewModal } from '../components/modals/quickPreview/QuickPreviewModal';
 export { default as StealthModeModal } from '../components/modals/storyStealthMode/StealthModeModal';
+export { default as QuickChatPickerModal } from '../components/modals/quickChatPicker/QuickChatPickerModal';

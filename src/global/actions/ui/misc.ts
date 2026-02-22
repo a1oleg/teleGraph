@@ -951,3 +951,13 @@ addCallback((global: GlobalState) => {
   prevIsScreenLocked = global.passcode.isScreenLocked;
   prevBlurredTabsCount = blurredTabsCount;
 });
+
+addActionHandler('openQuickChatPicker', (global, actions, payload): ActionReturnType => {
+  const { tabId = getCurrentTabId() } = payload || {};
+
+  return updateTabState(global, {
+    isQuickChatPickerOpen: true,
+  }, tabId);
+});
+
+addTabStateResetterAction('closeQuickChatPicker', 'isQuickChatPickerOpen');

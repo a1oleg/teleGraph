@@ -2556,6 +2556,9 @@ export interface ActionPayloads {
   openGiftRecipientPicker: WithTabId | undefined;
   closeGiftRecipientPicker: WithTabId | undefined;
 
+  openQuickChatPicker: WithTabId | undefined;
+  closeQuickChatPicker: WithTabId | undefined;
+
   openWebAppsCloseConfirmationModal: WithTabId | undefined;
 
   closeWebAppsCloseConfirmationModal: ({
