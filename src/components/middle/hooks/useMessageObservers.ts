@@ -34,6 +34,8 @@ export default function useMessageObservers(
   } = useIntersectionObserver({
     rootRef: containerRef,
     throttleMs: INTERSECTION_THROTTLE_FOR_READING,
+    // `memoFirstUnreadIdRef` is set after the first render, firing callback before that can skip some entries, like the last message
+    shouldSkipFirst: true,
   }, (entries) => {
     if (type !== 'thread' || isBackgroundModeActive()) {
       return;
@@ -97,7 +99,7 @@ export default function useMessageObservers(
     }
 
     if (reactionIds.length) {
-      animateUnreadReaction({ messageIds: reactionIds });
+      animateUnreadReaction({ chatId, messageIds: reactionIds });
     }
 
     if (viewportPinnedIdsToAdd.length || viewportPinnedIdsToRemove.length) {

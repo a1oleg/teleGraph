@@ -606,23 +606,45 @@ export interface TabThread {
   viewportIds?: number[];
 }
 
-export interface Thread {
+export interface ThreadReadState {
+  unreadCount?: number;
+  unreadMentionsCount?: number;
+  unreadReactionsCount?: number;
+  unreadReactions?: number[];
+  unreadMentions?: number[];
+  hasUnreadMark?: boolean;
+
+  lastReadOutboxMessageId?: number;
+  lastReadInboxMessageId?: number;
+}
+
+export interface ThreadLocalState {
   lastScrollOffset?: number;
   lastViewportIds?: number[];
   listedIds?: number[];
   outlyingLists?: number[][];
   pinnedIds?: number[];
   scheduledIds?: number[];
+  firstMessageId?: number;
+
   editingId?: number;
   editingScheduledId?: number;
   editingDraft?: ApiFormattedText;
   editingScheduledDraft?: ApiFormattedText;
+
   draft?: ApiDraft;
+
   noWebPage?: boolean;
-  threadInfo?: ApiThreadInfo;
-  firstMessageId?: number;
+
   typingStatus?: ApiTypingStatus;
+
   typingDraftIdByRandomId?: Record<string, number>;
+}
+
+export interface Thread {
+  localState: ThreadLocalState;
+  threadInfo: ApiThreadInfo;
+  readState: ThreadReadState;
 }
 
 export interface ServiceNotification {

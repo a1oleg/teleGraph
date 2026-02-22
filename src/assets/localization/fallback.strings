@@ -1234,8 +1234,8 @@
 "ChatListPinToTop" = "Pin to Top";
 "ChatListOpenInNewWindow" = "Open in New Window";
 "ChatListOpenInNewTab" = "Open in New Tab";
-"ChatListContextMaskAsRead" = "Mark as Read";
-"ChatListContextMaskAsUnread" = "Mark as Unread";
+"ChatListContextMarkAsRead" = "Mark as Read";
+"ChatListContextMarkAsUnread" = "Mark as Unread";
 "ChatListContextAddToFolder" = "Add to Folder";
 "Unarchive" = "Unarchive";
 "Archive" = "Archive";
@@ -2558,6 +2558,7 @@
 "BotReadTextFromClipboardTitle" = "Clipboard Access";
 "BotReadTextFromClipboardDescription" = "{bot} wants to read the contents of your clipboard. Do you want to continue?";
 "BotReadTextFromClipboardConfirm" = "Allow";
+"ChatInfoForumTopic" = "Topic";
 "DiceToast" = "Send a {emoji} emoji to try your luck.";
 "DiceToastSend" = "Send";
 "ChatTypePrivate" = "Private Chat";

@@ -56,7 +56,6 @@ import {
   selectChatMessage,
   selectCurrentChat,
   selectCurrentMessageList,
-  selectDraft,
   selectIsCurrentUserFrozen,
   selectIsTrustedBot,
   selectMessageReplyInfo,
@@ -68,6 +67,7 @@ import {
   selectUserFullInfo,
 } from '../../selectors';
 import { selectSharedSettings } from '../../selectors/sharedState';
+import { selectDraft } from '../../selectors/threads.ts';
 import { fetchChatByUsername } from './chats';
 import { getPeerStarsForMessage } from './messages';
 

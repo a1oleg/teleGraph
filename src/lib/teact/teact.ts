@@ -2,7 +2,7 @@
 import type { ReactElement } from 'react';
 
 import { DEBUG, DEBUG_MORE } from '../../config';
-import { logUnequalProps } from '../../util/arePropsShallowEqual';
+import { logUnequalProps } from '../../util/areShallowEqual';
 import { incrementOverlayCounter } from '../../util/debugOverlay';
 import { orderBy } from '../../util/iteratees';
 import safeExec from '../../util/safeExec';

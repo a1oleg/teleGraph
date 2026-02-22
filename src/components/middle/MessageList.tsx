@@ -40,18 +40,21 @@ import {
   selectIsCurrentUserPremium,
   selectIsInSelectMode,
   selectIsViewportNewest,
-  selectLastScrollOffset,
   selectMonoforumChannel,
   selectPerformanceSettingsValue,
-  selectScrollOffset,
   selectTabState,
-  selectThreadInfo,
   selectTopic,
   selectTranslationLanguage,
   selectUserFullInfo,
 } from '../../global/selectors';
 import { selectIsChatRestricted } from '../../global/selectors/chats';
 import { selectActiveRestrictionReasons, selectCurrentMessageList } from '../../global/selectors/messages';
+import {
+  selectLastScrollOffset,
+  selectScrollOffset,
+  selectThreadInfo,
+  selectThreadReadState,
+} from '../../global/selectors/threads';
 import animateScroll, { isAnimatingScroll, restartCurrentScrollAnimation } from '../../util/animateScroll';
 import { IS_FIREFOX } from '../../util/browser/windowEnvironment';
 import buildClassName from '../../util/buildClassName';
@@ -907,6 +910,7 @@ export default memo(withGlobal<OwnProps>(
     const currentUserId = global.currentUserId!;
     const chat = selectChat(global, chatId);
     const userFullInfo = selectUserFullInfo(global, chatId);
+    const readState = selectThreadReadState(global, chatId, threadId);
     if (!chat) {
       return { currentUserId } as Complete<StateProps>;
     }
@@ -932,7 +936,7 @@ export default memo(withGlobal<OwnProps>(
 
     const withLastMessageWhenPreloading = (
       threadId === MAIN_THREAD_ID
-      && !messageIds && !chat.unreadCount && !focusingId && lastMessage && !lastMessage.groupedId
+      && !messageIds && readState && !readState.unreadCount && !focusingId && lastMessage && !lastMessage.groupedId
     );
 
     const chatBot = selectBot(global, chatId);

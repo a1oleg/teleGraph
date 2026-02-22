@@ -1,4 +1,4 @@
-import { memo, useMemo } from '../../../../lib/teact/teact';
+import { memo, useCallback, useMemo } from '../../../../lib/teact/teact';
 import { getActions } from '../../../../global';
 
 import type {
@@ -42,12 +42,6 @@ type OwnProps = {
 
 const GIFT_STICKER_SIZE = 36;
 
-function selectOptionalPeer(peerId?: string) {
-  return (global: GlobalState) => (
-    peerId ? selectPeer(global, peerId) : undefined
-  );
-}
-
 const StarsTransactionItem = ({ transaction, className }: OwnProps) => {
   const { openStarsTransactionModal } = getActions();
   const {
@@ -62,7 +56,11 @@ const StarsTransactionItem = ({ transaction, className }: OwnProps) => {
   const oldLang = useOldLang();
 
   const peerId = transactionPeer.type === 'peer' ? transactionPeer.id : undefined;
-  const peer = useSelector(selectOptionalPeer(peerId));
+
+  const peerSelector = useCallback((global: GlobalState) => {
+    return peerId ? selectPeer(global, peerId) : undefined;
+  }, [peerId]);
+  const peer = useSelector(peerSelector);
   const starGift = transaction.starGift;
   const isUniqueGift = starGift?.type === 'starGiftUnique';
   const giftSticker = starGift && getStickerFromGift(starGift);

@@ -13,9 +13,10 @@ import {
   selectCurrentGifSearch,
   selectCurrentMessageList,
   selectIsChatWithBot,
-  selectIsChatWithSelf, selectThreadInfo,
+  selectIsChatWithSelf,
   selectTopic,
 } from '../../global/selectors';
+import { selectThreadInfo } from '../../global/selectors/threads';
 import { IS_TOUCH_ENV } from '../../util/browser/windowEnvironment';
 import buildClassName from '../../util/buildClassName';
 

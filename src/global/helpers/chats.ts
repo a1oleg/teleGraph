@@ -9,6 +9,7 @@ import type {
   ApiPeer,
   ApiPeerColorCollectible,
   ApiPreparedInlineMessage,
+  ApiThreadInfo,
   ApiTopic,
 } from '../../api/types';
 import type { OldLangFn } from '../../hooks/useOldLang';
@@ -346,20 +347,28 @@ export function isChatPublic(chat: ApiChat) {
 }
 
 export function getOrderedTopics(
-  topics: ApiTopic[], pinnedOrder?: number[], shouldSortByLastMessage = false,
+  topics: ApiTopic[],
+  topicThreadInfos?: Record<ThreadId, ApiThreadInfo>,
+  pinnedOrder?: number[],
+  shouldSortByLastMessage = false,
 ): ApiTopic[] {
+  const lastMessageIdComparator = (a: ApiTopic, b: ApiTopic) => (
+    (topicThreadInfos?.[b.id]?.lastMessageId || 0) - (topicThreadInfos?.[a.id]?.lastMessageId || 0)
+  );
+
   if (shouldSortByLastMessage) {
-    return topics.sort((a, b) => b.lastMessageId - a.lastMessageId);
+    return topics.sort(lastMessageIdComparator);
   } else {
     const pinned = topics.filter((topic) => topic.isPinned);
     const ordered = topics
       .filter((topic) => !topic.isPinned && !topic.isHidden)
-      .sort((a, b) => b.lastMessageId - a.lastMessageId);
+      .sort(lastMessageIdComparator);
     const hidden = topics.filter((topic) => !topic.isPinned && topic.isHidden)
-      .sort((a, b) => b.lastMessageId - a.lastMessageId);
+      .sort(lastMessageIdComparator);
 
     const pinnedOrdered = pinnedOrder
-      ? pinnedOrder.map((id) => pinned.find((topic) => topic.id === id)).filter(Boolean) : pinned;
+      ? pinnedOrder.map((id) => pinned.find((topic) => topic.id === id)).filter(Boolean)
+      : pinned;
 
     return [...pinnedOrdered, ...ordered, ...hidden];
   }

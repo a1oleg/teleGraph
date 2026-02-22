@@ -1,4 +1,4 @@
-import type { ThreadId, WebPageMediaSize } from '../../types';
+import type { ThreadId, ThreadReadState, WebPageMediaSize } from '../../types';
 import type {
   ApiBotInlineMediaResult,
   ApiBotInlineResult,
@@ -813,11 +813,10 @@ export type PaidReactionPrivacyPeer = {
   peerId: string;
 };
 
-interface ApiBaseThreadInfo {
+export interface ApiBaseThreadInfo {
   chatId: string;
-  messagesCount: number;
+  messagesCount?: number;
   lastMessageId?: number;
-  lastReadInboxMessageId?: number;
   recentReplierIds?: string[];
 }
 
@@ -1085,20 +1084,20 @@ export interface ApiTopic {
   isPinned?: boolean;
   isHidden?: boolean;
   isOwner?: boolean;
-
-  // TODO[forums] https://github.com/telegramdesktop/tdesktop/blob/1aece79a471d99a8b63d826b1bce1f36a04d7293/Telegram/SourceFiles/data/data_forum_topic.cpp#L318
   isMin?: boolean;
   date: number;
   title: string;
   iconColor: number;
   iconEmojiId?: string;
-  lastMessageId: number;
-  unreadCount: number;
-  unreadMentionsCount: number;
-  unreadReactionsCount: number;
   fromId: string;
   notifySettings: ApiPeerNotifySettings;
   isTitleMissing?: boolean;
+}
+
+export interface ApiTopicWithState {
+  topic: ApiTopic;
+  readState?: ThreadReadState;
+  lastMessageId?: number;
 }
 
 export const MAIN_THREAD_ID = -1;

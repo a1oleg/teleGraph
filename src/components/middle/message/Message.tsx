@@ -39,6 +39,7 @@ import type {
   TextSummary,
   ThemeKey,
   ThreadId,
+  ThreadReadState,
 } from '../../../types';
 import type { Signal } from '../../../util/signals';
 import type { OnIntersectPinnedMessage } from '../hooks/usePinnedMessage';
@@ -112,7 +113,6 @@ import {
   selectShouldLoopStickers,
   selectTabState,
   selectTheme,
-  selectThreadInfo,
   selectTopicFromMessage,
   selectUploadProgress,
   selectUser,
@@ -124,6 +124,7 @@ import {
   selectMessageTimestampableDuration,
 } from '../../../global/selectors/media';
 import { selectSharedSettings } from '../../../global/selectors/sharedState';
+import { selectThread, selectThreadReadState } from '../../../global/selectors/threads';
 import { IS_TAURI } from '../../../util/browser/globalEnvironment';
 import { IS_ANDROID, IS_TRANSLATION_SUPPORTED } from '../../../util/browser/windowEnvironment';
 import buildClassName from '../../../util/buildClassName';
@@ -293,6 +294,7 @@ type StateProps = {
   shouldLoopStickers?: boolean;
   autoLoadFileMaxSizeMb: number;
   repliesThreadInfo?: ApiThreadInfo;
+  repliesReadState?: ThreadReadState;
   reactionMessage?: ApiMessage;
   availableReactions?: ApiAvailableReaction[];
   defaultReaction?: ApiReaction;
@@ -428,6 +430,7 @@ const Message = ({
   shouldLoopStickers,
   autoLoadFileMaxSizeMb,
   repliesThreadInfo,
+  repliesReadState,
   hasUnreadReaction,
   memoFirstUnreadIdRef,
   senderAdminMember,
@@ -839,6 +842,7 @@ const Message = ({
   const phoneCall = action?.type === 'phoneCall' ? action : undefined;
 
   const commentsThreadInfo = repliesThreadInfo?.isCommentsInfo ? repliesThreadInfo : undefined;
+  const commentsReadState = repliesThreadInfo?.isCommentsInfo ? repliesReadState : undefined;
   const isLocalWithCommentButton = hasLinkedChat && isChannel && isLocal;
 
   const isMediaWithCommentButton = (commentsThreadInfo || isLocalWithCommentButton)
@@ -872,7 +876,8 @@ const Message = ({
     asForwarded,
     hasThread: hasThread && !noComments,
     forceSenderName,
-    hasCommentCounter: hasThread && repliesThreadInfo.messagesCount > 0,
+    hasCommentCounter: hasThread && repliesThreadInfo.messagesCount !== undefined
+      && repliesThreadInfo.messagesCount > 0,
     hasBottomCommentButton: withCommentButton && !isCustomShape,
     hasActionButton: canForward || canFocus || (withCommentButton && isCustomShape),
     hasReactions,
@@ -955,7 +960,7 @@ const Message = ({
     if (!bottomMarker || !isElementInViewport(bottomMarker)) return;
 
     if (hasUnreadReaction) {
-      animateUnreadReaction({ messageIds: [messageId] });
+      animateUnreadReaction({ chatId, messageIds: [messageId] });
     }
 
     let unreadMentionIds: number[] = [];
@@ -1889,6 +1894,7 @@ const Message = ({
                 {withCommentButton && isCustomShape && (
                   <CommentButton
                     threadInfo={commentsThreadInfo}
+                    threadReadState={commentsReadState}
                     disabled={noComments || !commentsThreadInfo}
                     isLoading={isLoadingComments}
                     isCustomShape
@@ -1920,6 +1926,7 @@ const Message = ({
           {withCommentButton && !isCustomShape && (
             <CommentButton
               threadInfo={commentsThreadInfo}
+              threadReadState={commentsReadState}
               disabled={noComments || !commentsThreadInfo}
               isLoading={isLoadingComments}
             />
@@ -2086,7 +2093,8 @@ export default memo(withGlobal<OwnProps>(
     const downloadableMedia = selectMessageDownloadableMedia(global, message);
     const isDownloading = downloadableMedia && getIsDownloading(activeDownloads, downloadableMedia);
 
-    const repliesThreadInfo = selectThreadInfo(global, chatId, album?.commentsMessage?.id || id);
+    const repliesThread = selectThread(global, chatId, album?.commentsMessage?.id || id);
+    const { threadInfo: repliesThreadInfo, readState: repliesReadState } = repliesThread || {};
 
     const isInDocumentGroup = Boolean(message.groupedId) && !message.isInAlbum;
     const documentGroupFirstMessageId = isInDocumentGroup
@@ -2096,7 +2104,8 @@ export default memo(withGlobal<OwnProps>(
       isLastInDocumentGroup ? selectChatMessage(global, chatId, documentGroupFirstMessageId!) : undefined
     ) : message;
 
-    const hasUnreadReaction = chat?.unreadReactions?.includes(message.id);
+    const readState = selectThreadReadState(global, chatId, threadId);
+    const hasUnreadReaction = readState?.unreadReactions?.includes(message.id);
 
     const hasTopicChip = threadId === MAIN_THREAD_ID && chat?.isForum && !chat.isBotForum && isFirstInGroup;
     const messageTopic = selectTopicFromMessage(global, message);
@@ -2187,6 +2196,7 @@ export default memo(withGlobal<OwnProps>(
       autoLoadFileMaxSizeMb: global.settings.byKey.autoLoadFileMaxSizeMb,
       shouldLoopStickers: selectShouldLoopStickers(global),
       repliesThreadInfo,
+      repliesReadState,
       availableReactions: global.reactions.availableReactions,
       defaultReaction: isMessageLocal(message) || messageListType === 'scheduled'
         ? undefined : selectDefaultReaction(global, chatId),
@@ -2212,7 +2222,9 @@ export default memo(withGlobal<OwnProps>(
         && loadingThread?.loadingChatId === repliesThreadInfo?.originChannelId
         && loadingThread?.loadingMessageId === repliesThreadInfo?.originMessageId,
       shouldWarnAboutFiles,
-      outgoingStatus: isOutgoing ? selectOutgoingStatus(global, message, messageListType === 'scheduled') : undefined,
+      outgoingStatus: isOutgoing
+        ? selectOutgoingStatus(global, chatId, threadId, message.id, messageListType)
+        : undefined,
       uploadProgress: typeof uploadProgress === 'number' ? uploadProgress : undefined,
       focusDirection: isFocused ? focusDirection : undefined,
       noFocusHighlight: isFocused ? noFocusHighlight : undefined,

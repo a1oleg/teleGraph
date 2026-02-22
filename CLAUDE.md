@@ -304,7 +304,7 @@ Global State is our single, app-wide store, similar to Redux or Zustand. All its
 ### 1. Accessing Global in Components
 
 * **Use** `withGlobal` (a `mapStateToProps` helper) to pull in state.
-* **Avoid** the experimental `useSelector` API.
+* There is an experimental `useSelector` API available.
 * **Use** `getGlobal` **only** inside hooks for one-off reads (it's non-reactive).
 
 ### 2. Performance

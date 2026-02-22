@@ -34,6 +34,7 @@ import {
   selectSender,
   selectTabState,
 } from '../../../global/selectors';
+import { selectThreadReadState } from '../../../global/selectors/threads';
 import { IS_TAURI } from '../../../util/browser/globalEnvironment';
 import { IS_ANDROID, IS_FLUID_BACKGROUND_SUPPORTED } from '../../../util/browser/windowEnvironment';
 import buildClassName from '../../../util/buildClassName';
@@ -295,7 +296,7 @@ const ActionMessage = ({
     if (!bottomMarker || !isElementInViewport(bottomMarker)) return;
 
     if (hasUnreadReaction) {
-      animateUnreadReaction({ messageIds: [id] });
+      animateUnreadReaction({ chatId, messageIds: [id] });
     }
 
     if (message.hasUnreadMention) {
@@ -672,7 +673,8 @@ export default memo(withGlobal<OwnProps>(
 
     const isCurrentUserPremium = selectIsCurrentUserPremium(global);
 
-    const hasUnreadReaction = chat?.unreadReactions?.includes(message.id);
+    const readState = selectThreadReadState(global, message.chatId, threadId);
+    const hasUnreadReaction = readState?.unreadReactions?.includes(message.id);
     const isAccountFrozen = selectIsCurrentUserFrozen(global);
 
     return {

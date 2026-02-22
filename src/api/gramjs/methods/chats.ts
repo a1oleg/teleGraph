@@ -1,24 +1,26 @@
 import { Api as GramJs } from '../../../lib/gramjs';
 import { RPCError } from '../../../lib/gramjs/errors';
 
-import type { ChatListType } from '../../../types';
-import type {
-  ApiChat,
-  ApiChatAdminRights,
-  ApiChatBannedRights,
-  ApiChatFolder,
-  ApiChatFullInfo,
-  ApiChatReactions,
-  ApiDraft,
-  ApiGroupCall,
-  ApiMessage,
-  ApiMissingInvitedUser,
-  ApiPeer,
-  ApiPeerNotifySettings,
-  ApiPhoto,
-  ApiProfileTab,
-  ApiUser,
-  ApiUserStatus,
+import type { ChatListType, ThreadReadState } from '../../../types';
+import {
+  type ApiChat,
+  type ApiChatAdminRights,
+  type ApiChatBannedRights,
+  type ApiChatFolder,
+  type ApiChatFullInfo,
+  type ApiChatReactions,
+  type ApiDraft,
+  type ApiGroupCall,
+  type ApiMessage,
+  type ApiMissingInvitedUser,
+  type ApiPeer,
+  type ApiPeerNotifySettings,
+  type ApiPhoto,
+  type ApiProfileTab,
+  type ApiThreadInfo,
+  type ApiUser,
+  type ApiUserStatus,
+  MAIN_THREAD_ID,
 } from '../../types';
 
 import {
@@ -43,8 +45,10 @@ import {
   buildApiChatReactions,
   buildApiMissingInvitedUser,
   buildApiSponsoredPeer,
+  buildApiThreadInfoFromDialog,
   buildChatMember,
   buildChatMembers,
+  buildThreadReadState,
   getPeerKey,
 } from '../apiBuilders/chats';
 import { buildApiPhoto } from '../apiBuilders/common';
@@ -101,6 +105,8 @@ type ChatListData = {
   users: ApiUser[];
   userStatusesById: Record<string, ApiUserStatus>;
   draftsById: Record<string, ApiDraft>;
+  threadReadStatesById?: Record<string, ThreadReadState>;
+  threadInfos: ApiThreadInfo[];
   orderedPinnedIds: string[] | undefined;
   totalChatCount: number;
   messages: ApiMessage[];
@@ -161,6 +167,8 @@ export async function fetchChats({
   const chats: ApiChat[] = [];
   const draftsById: Record<string, ApiDraft> = {};
   const notifyExceptionById: Record<string, ApiPeerNotifySettings> = {};
+  const threadReadStatesById: Record<string, ThreadReadState> = {};
+  const threadInfos: ApiThreadInfo[] = [];
 
   const dialogs = (resultPinned?.dialogs || []).concat(result.dialogs);
 
@@ -216,6 +224,12 @@ export async function fetchChats({
         draftsById[chat.id] = draft;
       }
     }
+
+    const readState = buildThreadReadState(dialog);
+    threadReadStatesById[chat.id] = readState;
+
+    const threadInfo = buildApiThreadInfoFromDialog(chat.id, dialog);
+    threadInfos.push(threadInfo);
   });
 
   const chatIds = chats.map((chat) => chat.id);
@@ -251,26 +265,33 @@ export async function fetchChats({
     nextOffsetId,
     nextOffsetPeerId,
     nextOffsetDate,
+    threadReadStatesById,
+    threadInfos,
   };
 }
 
 export async function fetchSavedChats({
+  parentPeer,
   limit,
   offsetDate,
   offsetPeer,
   offsetId,
   withPinned,
 }: {
+  parentPeer: ApiPeer;
   limit: number;
   offsetDate?: number;
   offsetPeer?: ApiPeer;
   offsetId?: number;
   withPinned?: boolean;
 }): Promise<ChatListData | undefined> {
+  const isMonoforum = 'title' in parentPeer;
+  const inputParentPeer = isMonoforum ? buildInputPeer(parentPeer.id, parentPeer.accessHash) : undefined;
   const peer = (offsetPeer && buildInputPeer(offsetPeer.id, offsetPeer.accessHash)) || new GramJs.InputPeerEmpty();
   const result = await invokeRequest(new GramJs.messages.GetSavedDialogs({
     offsetPeer: peer,
     offsetId: offsetId ?? DEFAULT_PRIMITIVES.INT,
+    parentPeer: inputParentPeer,
     limit,
     offsetDate: offsetDate ?? DEFAULT_PRIMITIVES.INT,
     hash: DEFAULT_PRIMITIVES.BIGINT,
@@ -301,6 +322,7 @@ export async function fetchSavedChats({
   const chatIds: string[] = [];
   const orderedPinnedIds: string[] = [];
   const lastMessageByChatId: Record<string, number> = {};
+  const threadInfos: ApiThreadInfo[] = [];
 
   const chats: ApiChat[] = [];
 
@@ -321,6 +343,9 @@ export async function fetchSavedChats({
     lastMessageByChatId[chatId] = dialog.topMessage;
 
     chats.push(chat);
+
+    const threadInfo = buildApiThreadInfoFromDialog(parentPeer.id, dialog);
+    threadInfos.push(threadInfo);
   });
 
   const users = result.users.map(buildApiUser).filter(Boolean);
@@ -355,6 +380,7 @@ export async function fetchSavedChats({
     nextOffsetId,
     nextOffsetPeerId,
     nextOffsetDate,
+    threadInfos,
   };
 }
 
@@ -495,6 +521,14 @@ export async function requestChatUpdate({
     : lastRemoteMessage;
 
   const chatUpdate = buildApiChatFromDialog(dialog, peerEntity);
+
+  const readState = buildThreadReadState(dialog);
+  sendApiUpdate({
+    '@type': 'updateThreadReadState',
+    chatId: id,
+    threadId: MAIN_THREAD_ID,
+    readState,
+  });
 
   sendApiUpdate({
     '@type': 'updateChat',
@@ -1195,7 +1229,7 @@ export function toggleDialogFilterTags(isEnabled: boolean) {
 export async function toggleDialogUnread({
   chat, hasUnreadMark,
 }: {
-  chat: ApiChat; hasUnreadMark: boolean | undefined;
+  chat: ApiChat; hasUnreadMark?: true;
 }) {
   const { id, accessHash } = chat;
 
@@ -1203,14 +1237,17 @@ export async function toggleDialogUnread({
     peer: new GramJs.InputDialogPeer({
       peer: buildInputPeer(id, accessHash),
     }),
-    unread: hasUnreadMark || undefined,
+    unread: hasUnreadMark,
   }));
 
   if (isActionSuccessful) {
     sendApiUpdate({
-      '@type': 'updateChat',
-      id: chat.id,
-      chat: { hasUnreadMark },
+      '@type': 'updateThreadReadState',
+      chatId: chat.id,
+      threadId: MAIN_THREAD_ID,
+      readState: {
+        hasUnreadMark,
+      },
     });
   }
 }

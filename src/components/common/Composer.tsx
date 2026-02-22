@@ -77,10 +77,7 @@ import {
   selectChatType,
   selectCurrentMessageList,
   selectCustomEmoji,
-  selectDraft,
-  selectEditingDraft,
   selectEditingMessage,
-  selectEditingScheduledDraft,
   selectIsChatWithSelf,
   selectIsCurrentUserFrozen,
   selectIsCurrentUserPremium,
@@ -91,7 +88,6 @@ import {
   selectNewestMessageWithBotKeyboardButtons,
   selectNotifyDefaults,
   selectNotifyException,
-  selectNoWebPage,
   selectPeer,
   selectPeerPaidMessagesStars,
   selectPeerStory,
@@ -107,6 +103,12 @@ import {
 } from '../../global/selectors';
 import { selectCurrentLimit } from '../../global/selectors/limits';
 import { selectSharedSettings } from '../../global/selectors/sharedState';
+import {
+  selectDraft,
+  selectEditingDraft,
+  selectEditingScheduledDraft,
+  selectNoWebPage,
+} from '../../global/selectors/threads';
 import { IS_IOS, IS_VOICE_RECORDING_SUPPORTED } from '../../util/browser/windowEnvironment';
 import buildClassName from '../../util/buildClassName';
 import { formatMediaDuration, formatVoiceRecordDuration } from '../../util/dates/dateFormat';

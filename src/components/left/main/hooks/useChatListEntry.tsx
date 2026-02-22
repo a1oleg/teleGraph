@@ -36,7 +36,7 @@ import TypingStatus from '../../../common/TypingStatus';
 
 export default function useChatListEntry({
   chat,
-  topics,
+  topicIds,
   lastMessage,
   statefulMediaContent,
   chatId,
@@ -56,7 +56,7 @@ export default function useChatListEntry({
   onReorderAnimationEnd,
 }: {
   chat?: ApiChat;
-  topics?: Record<number, ApiTopic>;
+  topicIds?: number[];
   lastMessage?: ApiMessage;
   statefulMediaContent: StatefulMediaContent | undefined;
   chatId: string;
@@ -157,7 +157,7 @@ export default function useChatListEntry({
           chat={chat}
           renderLastMessage={renderLastMessageOrTyping}
           observeIntersection={observeIntersection}
-          topics={topics}
+          topicIds={topicIds}
           hasTags={hasTags}
         />
       );

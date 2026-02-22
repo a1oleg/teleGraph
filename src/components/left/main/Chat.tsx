@@ -33,7 +33,6 @@ import {
   selectChatLastMessageId,
   selectChatMessage,
   selectCurrentMessageList,
-  selectDraft,
   selectIsCurrentUserFrozen,
   selectIsCurrentUserPremium,
   selectIsForumPanelClosed,
@@ -46,19 +45,19 @@ import {
   selectPeerStory,
   selectSender,
   selectTabState,
-  selectThreadParam,
   selectTopicFromMessage,
   selectTopicsInfo,
   selectUser,
   selectUserStatus,
 } from '../../../global/selectors';
+import { selectDraft, selectThreadLocalStateParam } from '../../../global/selectors/threads';
 import { IS_OPEN_IN_NEW_TAB_SUPPORTED } from '../../../util/browser/windowEnvironment';
 import buildClassName from '../../../util/buildClassName';
 import { isUserId } from '../../../util/entities/ids';
 import { getChatFolderIds } from '../../../util/folderManager';
 import { createLocationHash } from '../../../util/routing';
 
-import useSelectorSignal from '../../../hooks/data/useSelectorSignal';
+import { useSelectorSignal } from '../../../hooks/data/useSelector';
 import useAppLayout from '../../../hooks/useAppLayout';
 import useChatContextActions from '../../../hooks/useChatContextActions';
 import useEnsureMessage from '../../../hooks/useEnsureMessage';
@@ -96,11 +95,11 @@ type OwnProps = {
   previewMessageId?: number;
   className?: string;
   withTags?: boolean;
+  isFoldersSidebarShown?: boolean;
   observeIntersection?: ObserveFn;
   onDragEnter?: (chatId: string) => void;
   onDragLeave?: NoneToVoidFunction;
   onReorderAnimationEnd?: NoneToVoidFunction;
-  isFoldersSidebarShown?: boolean;
 };
 
 type StateProps = {
@@ -108,7 +107,6 @@ type StateProps = {
   monoforumChannel?: ApiChat;
   lastMessageStory?: ApiTypeStory;
   listedTopicIds?: number[];
-  topics?: Record<number, ApiTopic>;
   isMuted?: boolean;
   user?: ApiUser;
   userStatus?: ApiUserStatus;
@@ -142,7 +140,6 @@ const Chat: FC<OwnProps & StateProps> = ({
   animationType,
   isPinned,
   listedTopicIds,
-  topics,
   observeIntersection,
   chat,
   monoforumChannel,
@@ -170,16 +167,16 @@ const Chat: FC<OwnProps & StateProps> = ({
   previewMessageId,
   className,
   isSynced,
-  onDragEnter,
-  onDragLeave,
   isAccountFrozen,
   chatFolderIds,
   orderedFolderIds,
   chatFoldersById,
   areTagsEnabled,
   withTags,
-  onReorderAnimationEnd,
   isFoldersSidebarShown,
+  onDragEnter,
+  onDragLeave,
+  onReorderAnimationEnd,
 }) => {
   const {
     openChat,
@@ -245,7 +242,7 @@ const Chat: FC<OwnProps & StateProps> = ({
     isSavedDialog,
     isPreview,
     onReorderAnimationEnd,
-    topics,
+    topicIds: listedTopicIds,
     hasTags: shouldRenderTags,
   });
 
@@ -366,7 +363,7 @@ const Chat: FC<OwnProps & StateProps> = ({
     isSavedDialog,
     currentUserId,
     isPreview,
-    topics,
+    topicIds: listedTopicIds,
   });
 
   const isIntersecting = useIsIntersecting(ref, chat ? observeIntersection : undefined);
@@ -445,7 +442,6 @@ const Chat: FC<OwnProps & StateProps> = ({
             isMuted={isMuted}
             shouldShowOnlyMostImportant
             forceHidden={getIsForumPanelClosed}
-            topics={topics}
             isSelected={isSelected}
             isOnAvatar
           />
@@ -485,7 +481,6 @@ const Chat: FC<OwnProps & StateProps> = ({
               isMuted={isMuted}
               isSavedDialog={isSavedDialog}
               hasMiniApp={user?.hasMainMiniApp}
-              topics={topics}
               isSelected={isSelected}
               transitionClassName="chat-badge-transition"
             />
@@ -557,7 +552,7 @@ export default memo(withGlobal<OwnProps>(
     const {
       chatId: currentChatId,
       threadId: currentThreadId,
-      type: messageListType,
+      type: currentMessageListType,
     } = selectCurrentMessageList(global) || {};
     const isSelected = !isPreview && chatId === currentChatId && (isSavedDialog
       ? chatId === currentThreadId : currentThreadId === MAIN_THREAD_ID);
@@ -567,7 +562,7 @@ export default memo(withGlobal<OwnProps>(
     const userStatus = selectUserStatus(global, chatId);
     const lastMessageTopic = lastMessage && selectTopicFromMessage(global, lastMessage);
 
-    const typingStatus = selectThreadParam(global, chatId, MAIN_THREAD_ID, 'typingStatus');
+    const typingStatus = selectThreadLocalStateParam(global, chatId, MAIN_THREAD_ID, 'typingStatus');
 
     const topicsInfo = selectTopicsInfo(global, chatId);
 
@@ -585,9 +580,11 @@ export default memo(withGlobal<OwnProps>(
       isSelected,
       isSelectedForum,
       isForumPanelOpen: selectIsForumPanelOpen(global),
-      canScrollDown: isSelected && messageListType === 'thread',
+      canScrollDown: isSelected && currentMessageListType === 'thread',
       canChangeFolder: (global.chatFolders.orderedIds?.length || 0) > 1,
-      lastMessageOutgoingStatus: isOutgoing && lastMessage ? selectOutgoingStatus(global, lastMessage) : undefined,
+      lastMessageOutgoingStatus: isOutgoing && lastMessage && !isSavedDialog
+        ? selectOutgoingStatus(global, chatId, MAIN_THREAD_ID, lastMessage.id, 'thread')
+        : undefined,
       user,
       userStatus,
       lastMessageTopic,
@@ -597,7 +594,6 @@ export default memo(withGlobal<OwnProps>(
       lastMessageId,
       currentUserId: global.currentUserId!,
       listedTopicIds: topicsInfo?.listedTopicIds,
-      topics: topicsInfo?.topicsById,
       isSynced: global.isSynced,
       lastMessageStory,
       isAccountFrozen,

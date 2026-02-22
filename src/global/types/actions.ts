@@ -529,17 +529,13 @@ export interface ActionPayloads {
     maxId: number;
   } & WithTabId;
   markMessagesRead: {
+    chatId: string;
     messageIds: number[];
-    shouldFetchUnreadReactions?: boolean;
-  } & WithTabId;
+  };
   loadMessage: {
     chatId: string;
     messageId: number;
     replyOriginForId?: number;
-    threadUpdate?: {
-      lastMessageId: number;
-      isDeleting?: boolean;
-    };
   };
   loadMessagesById: {
     chatId: string;
@@ -1410,12 +1406,14 @@ export interface ActionPayloads {
     threadId: ThreadId;
     type: MessageListType;
   };
-  fetchUnreadMentions: {
+  loadUnreadMentions: {
     chatId: string;
+    threadId?: ThreadId;
     offsetId?: number;
   };
-  fetchUnreadReactions: {
+  loadUnreadReactions: {
     chatId: string;
+    threadId?: ThreadId;
     offsetId?: number;
   };
   scheduleForViewsIncrement: {
@@ -1441,10 +1439,17 @@ export interface ActionPayloads {
     quickReplyId: number;
   };
   animateUnreadReaction: {
+    chatId: string;
     messageIds: number[];
   } & WithTabId;
-  focusNextReaction: WithTabId | undefined;
-  focusNextMention: WithTabId | undefined;
+  focusNextReaction: {
+    chatId: string;
+    threadId?: ThreadId;
+  } & WithTabId;
+  focusNextMention: {
+    chatId: string;
+    threadId?: ThreadId;
+  } & WithTabId;
   readAllReactions: {
     chatId: string;
     threadId?: ThreadId;
@@ -1456,7 +1461,7 @@ export interface ActionPayloads {
   markMentionsRead: {
     chatId: string;
     messageIds: number[];
-  } & WithTabId;
+  };
   copyMessageLink: {
     chatId: string;
     messageId: number;

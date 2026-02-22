@@ -23,9 +23,9 @@ import {
   selectMonoforumChannel,
   selectPeer,
   selectSender,
-  selectThreadIdFromMessage,
   selectTopic,
 } from '../../../global/selectors';
+import { selectThreadIdFromMessage } from '../../../global/selectors/threads';
 import { ensureProtocol } from '../../../util/browser/url';
 import { formatDateTimeToString, formatScheduledDateTime, formatShortDuration } from '../../../util/dates/dateFormat';
 import { formatCurrency } from '../../../util/formatCurrency';

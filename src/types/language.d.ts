@@ -1059,8 +1059,8 @@ export interface LangPair {
   'ChatListPinToTop': undefined;
   'ChatListOpenInNewWindow': undefined;
   'ChatListOpenInNewTab': undefined;
-  'ChatListContextMaskAsRead': undefined;
-  'ChatListContextMaskAsUnread': undefined;
+  'ChatListContextMarkAsRead': undefined;
+  'ChatListContextMarkAsUnread': undefined;
   'ChatListContextAddToFolder': undefined;
   'Unarchive': undefined;
   'Archive': undefined;
@@ -1886,6 +1886,7 @@ export interface LangPair {
   'SettingsBirthday': undefined;
   'BotReadTextFromClipboardTitle': undefined;
   'BotReadTextFromClipboardConfirm': undefined;
+  'ChatInfoForumTopic': undefined;
   'DiceToastSend': undefined;
   'ChatTypePrivate': undefined;
   'ChatTypeGroup': undefined;
