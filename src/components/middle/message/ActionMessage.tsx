@@ -616,6 +616,7 @@ const ActionMessage = ({
           {fullContent}
           {shouldRenderInlineButtons && (
             <InlineButtons
+              className={styles.inlineButtons}
               inlineButtons={giftOfferInlineButtons}
               onClick={handleInlineButtonClick}
             />

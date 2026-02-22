@@ -143,26 +143,27 @@ const ChatBadge = ({
   });
 
   function renderContent() {
-    const baseClassName = buildClassName(styles.badge, !shouldBeUnMuted && styles.muted, badgeClassName);
+    const baseClassName = buildClassName(styles.badge, badgeClassName);
+    const statefulClassName = buildClassName(baseClassName, !shouldBeUnMuted && styles.muted);
 
     const unreadReactionsElement = unreadReactionsCount && (
-      <div className={buildClassName(baseClassName, styles.reaction, styles.round)}>
+      <div className={buildClassName(statefulClassName, styles.reaction, styles.round)}>
         <Icon name="heart" />
       </div>
     );
 
     const unreadMentionsElement = unreadMentionsCount && (
-      <div className={buildClassName(baseClassName, styles.mention, styles.round)}>
+      <div className={buildClassName(statefulClassName, styles.mention, styles.round)}>
         <Icon name="mention" />
       </div>
     );
 
     const unopenedTopicElement = isTopicUnopened && (
-      <div className={buildClassName(baseClassName, styles.unopened)} />
+      <div className={buildClassName(statefulClassName, styles.unopened)} />
     );
 
     const unreadCountElement = isUnread ? (
-      <div className={buildClassName(baseClassName, styles.unread)}>
+      <div className={buildClassName(statefulClassName, styles.unread)}>
         {!hasUnreadMark && <AnimatedCounter text={formatIntegerCompact(lang, unreadCount!)} />}
       </div>
     ) : undefined;

@@ -86,10 +86,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
 
-  :global(.InlineButtons) {
-    width: 100%;
-  }
+.inlineButtons {
+  width: 100%;
 }
 
 .contextContainer {

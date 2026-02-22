@@ -874,85 +874,94 @@ export type ApiSponsoredMessage = {
 
 // KeyboardButtons
 
-interface ApiKeyboardButtonSimple {
+export interface ApiKeyboardButtonStyle {
+  type?: 'primary' | 'success' | 'destructive';
+  iconId?: string;
+}
+
+export interface ApiKeyboardButtonBase {
+  style?: ApiKeyboardButtonStyle;
+}
+
+interface ApiKeyboardButtonSimple extends ApiKeyboardButtonBase {
   type: 'unsupported' | 'buy' | 'command' | 'requestPhone' | 'game';
   text: string;
 }
 
-interface ApiKeyboardButtonReceipt {
+interface ApiKeyboardButtonReceipt extends ApiKeyboardButtonBase {
   type: 'receipt';
   receiptMessageId: number;
 }
 
-interface ApiKeyboardButtonUrl {
+interface ApiKeyboardButtonUrl extends ApiKeyboardButtonBase {
   type: 'url';
   text: string;
   url: string;
 }
 
-interface ApiKeyboardButtonSimpleWebView {
+interface ApiKeyboardButtonSimpleWebView extends ApiKeyboardButtonBase {
   type: 'simpleWebView';
   text: string;
   url: string;
 }
 
-interface ApiKeyboardButtonWebView {
+interface ApiKeyboardButtonWebView extends ApiKeyboardButtonBase {
   type: 'webView';
   text: string;
   url: string;
 }
 
-interface ApiKeyboardButtonCallback {
+interface ApiKeyboardButtonCallback extends ApiKeyboardButtonBase {
   type: 'callback';
   text: string;
   data: string;
 }
 
-interface ApiKeyboardButtonRequestPoll {
+interface ApiKeyboardButtonRequestPoll extends ApiKeyboardButtonBase {
   type: 'requestPoll';
   text: string;
   isQuiz?: boolean;
 }
 
-interface ApiKeyboardButtonSwitchBotInline {
+interface ApiKeyboardButtonSwitchBotInline extends ApiKeyboardButtonBase {
   type: 'switchBotInline';
   text: string;
   query: string;
   isSamePeer?: boolean;
 }
 
-interface ApiKeyboardButtonUserProfile {
+interface ApiKeyboardButtonUserProfile extends ApiKeyboardButtonBase {
   type: 'userProfile';
   text: string;
   userId: string;
 }
 
-interface ApiKeyboardButtonUrlAuth {
+interface ApiKeyboardButtonUrlAuth extends ApiKeyboardButtonBase {
   type: 'urlAuth';
   text: string;
   url: string;
   buttonId: number;
 }
 
-interface ApiKeyboardButtonCopy {
+interface ApiKeyboardButtonCopy extends ApiKeyboardButtonBase {
   type: 'copy';
   text: string;
   copyText: string;
 }
 
-export interface KeyboardButtonSuggestedMessage {
+export interface KeyboardButtonSuggestedMessage extends ApiKeyboardButtonBase {
   type: 'suggestedMessage';
   text: string;
   buttonType: 'approve' | 'decline' | 'suggestChanges';
   disabled?: boolean;
 }
 
-export interface KeyboardButtonOpenThread {
+export interface KeyboardButtonOpenThread extends ApiKeyboardButtonBase {
   type: 'openThread';
   text: string;
 }
 
-export interface KeyboardButtonGiftOffer {
+export interface KeyboardButtonGiftOffer extends ApiKeyboardButtonBase {
   type: 'giftOffer';
   text: string;
   buttonType: 'accept' | 'reject';
