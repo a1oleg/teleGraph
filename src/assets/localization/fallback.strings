@@ -63,7 +63,7 @@
 "PremiumPreviewAnimatedProfiles" = "Animated Profile Pictures";
 "PremiumPreviewLimitsDescription" = "Up to {limit1} channels, {limit2} folders, {limit3} pins, {limit4} public links, {limit5} accounts and more.";
 "PremiumPreviewReactionsDescription" = "Additional animated reactions on messages, available only to Premium subscribers.";
-"PremiumPreviewStickersDescription" = "Exclusive enlarged stickers featuring additional effects, updated monthly.";
+"PremiumPreviewStickersDescription" = "Exclusive enlarged stickers featuring additional effects, updated regularly.";
 "PremiumPreviewNoAdsDescription" = "No more ads in public channels where Telegram sometimes shows ads.";
 "PremiumPreviewVoiceToTextDescription" = "Ability to read the transcript of any incoming voice message.";
 "PremiumPreviewProfileBadgeDescription" = "An exclusive badge next to your name showing that you subscribe to Telegram Premium.";
@@ -1624,7 +1624,7 @@
 "GiftPayForUpgradeButton" = "Pay {amount} for Upgrade";
 "GiftUpgradedTitle" = "This gift is now a collectible";
 "GiftUpgradedDescription" = "You have received a unique number, model, backdrop and symbol for your gift.";
-"GiftPeerUpgradeUniqueDescription" = "{user} will get a unique number, model, backdrop, and symbol for the gift.";
+"GiftPeerUpgradeUniqueDescription" = "{user} will get a unique number, model, backdrop and symbol for the gift.";
 "GiftPeerUpgradeTransferableDescription" = "{user} will be able to send the gift to anyone on Telegram.";
 "GiftPeerUpgradeTradeableDescription" = "{user} will be able to auction the gift on third-party NFT marketplaces.";
 "GiftUpgradeSentTitle" = "Gift Upgrade sent!";
@@ -1966,10 +1966,10 @@
 "ActionStarGiftAuctionBought" = "You bought this gift at auction for {cost}.";
 "ActionStarGiftOfferOutgoing" = "You offered {peer} {cost} for {gift}.";
 "ActionStarGiftOfferIncoming" = "{peer} offered you {cost} for {gift}.";
-"ActionStarGiftOfferExpires" = "This offer expires in {time}";
+"ActionStarGiftOfferExpires" = "This offer expires in {time}.";
 "ActionStarGiftOfferAccepted" = "This offer was accepted.";
 "ActionStarGiftOfferRejected" = "This offer was rejected.";
-"ActionStarGiftOfferHasExpired" = "This offer has expired";
+"ActionStarGiftOfferHasExpired" = "This offer has expired.";
 "ActionStarGiftOfferDeclinedOutgoing" = "You rejected {peer}'s offer to buy your {gift} for {cost}.";
 "ActionStarGiftOfferDeclinedIncoming" = "{peer} rejected your offer to buy {gift} for {cost}.";
 "GiftOfferReject" = "Reject";
@@ -2029,7 +2029,7 @@
 "ActionGiftCodeSubscriptionText_one" = "You've received a gift from {peer}.\n\nYour gift is a Telegram Premium subscription for {months} month.";
 "ActionGiftCodeSubscriptionText_other" = "You've received a gift from {peer}.\n\nYour gift is a Telegram Premium subscription for {months} months.";
 "ActionGiftCodeSubscriptionDuration" = "You've received a gift from {peer}.\n\nYour gift is a Telegram Premium subscription for {duration}.";
-"ActionGiftCodeSubscriptionDurationYou" = "You've sent a gift to {peer}.\n\nTelegram Premium subscription giftcode for {duration}.";
+"ActionGiftCodeSubscriptionDurationYou" = "You sent {peer} a gift code for {duration} of Telegram Premium.";
 "ActionGiftCodeSubscriptionTextYou_one" = "You've sent a gift to {peer}.\n\nTelegram Premium subscription giftcode for {months} month.";
 "ActionGiftCodeSubscriptionTextYou_other" = "You've sent a gift to {peer}.\n\nTelegram Premium subscription giftcode for {months} months.";
 "ActionGiftPremiumTitle_one" = "{months} Month Premium";
@@ -2055,11 +2055,11 @@
 "UniqueStatusWearTitle" = "Wear {gift}";
 "UniqueStatusBenefitsDescription" = "and get these benefits:";
 "UniqueStatusBadgeBenefitTitle" = "Radiant Badge";
-"UniqueStatusBadgeDescription" = "The glittering icon of this item will be displayed next to your name.";
+"UniqueStatusBadgeDescription" = "This gift will be displayed next to your name with a glittering icon.";
 "UniqueStatusProfileDesignBenefitTitle" = "Unique Profile Design";
-"UniqueStatusProfileDesignDescription" = "Your profile page will get the color and the symbol of this item.";
+"UniqueStatusProfileDesignDescription" = "Your profile will use the color and the symbol of this gift.";
 "UniqueStatusProofOfOwnershipBenefitTitle" = "Proof of Ownership";
-"UniqueStatusProofOfOwnershipDescription" = "Tapping the icon of this item next to your name will show its info and owner.";
+"UniqueStatusProofOfOwnershipDescription" = "Tapping the icon of this gift next to your name will show its info and owner.";
 "UniqueStatusWearButton" = "Start Wearing";
 "CollectibleStatusesCategory" = "Collectibles";
 "PeerPersonalAccount" = "personal account";
@@ -2162,7 +2162,7 @@
 "StarGiftPurchaseTransaction" = "Gift Sale";
 "GiftBuyConfirmDescription" = "Do you want to buy **{gift}** for **{stars}**?";
 "GiftBuyForPeerConfirmDescription" = "Do you want to buy **{gift}** for **{stars}** and gift it to **{peer}**?";
-"GiftBuyEqualsTo" = "Equals to {stars}";
+"GiftBuyEqualsTo" = "Equal to {stars}";
 "ComposerTitleForwardFrom" = "From: **{users}**";
 "ContextMenuItemMention" = "Mention";
 "GiftRibbonResale" = "resale";
