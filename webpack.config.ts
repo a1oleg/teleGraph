@@ -230,6 +230,11 @@ export default function createConfig(
         // eslint-disable-next-line no-null/no-null
         TEST_SESSION: null,
         BASE_URL,
+        // Graph logging (Aura Neo4j)
+        AURA_NEO4J_URI: '',
+        AURA_NEO4J_DATABASE: 'neo4j',
+        AURA_NEO4J_USER: '',
+        AURA_NEO4J_PASSWORD: '',
       }),
       // Updates each dev re-build to provide current git branch or commit hash
       new DefinePlugin({

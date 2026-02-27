@@ -26,6 +26,7 @@ import { onBeforeUnload } from './util/schedulers';
 import initTauriApi from './util/tauri/initTauriApi';
 import setupTauriListeners from './util/tauri/setupTauriListeners';
 import updateWebmanifest from './util/updateWebmanifest';
+import AuraGraphReporter from './util/graphLogger/AuraGraphReporter';
 
 import App from './components/App';
 
@@ -48,6 +49,14 @@ async function init() {
     // eslint-disable-next-line no-console
     console.log('>>> INIT');
   }
+
+  // ── Graph logging: init AuraGraphReporter ──
+  AuraGraphReporter.init({
+    uri: process.env.AURA_NEO4J_URI || '',
+    database: process.env.AURA_NEO4J_DATABASE || 'neo4j',
+    user: process.env.AURA_NEO4J_USER || '',
+    password: process.env.AURA_NEO4J_PASSWORD || '',
+  });
 
   if (!(window as any).isCompatTestPassed) return;
 

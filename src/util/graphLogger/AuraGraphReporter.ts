@@ -1,4 +1,5 @@
-import neo4j, { Driver, Session } from 'neo4j-driver';
+import neo4j, { Driver } from 'neo4j-driver';
+import { flattenProps } from './flattenProps';
 
 export type AuraConfig = {
   uri: string;
@@ -20,32 +21,118 @@ export type AuraLogEvent = {
   nodeProps: Record<string, any>;
 };
 
+let _instance: AuraGraphReporter | undefined;
+
 class AuraGraphReporter {
-  private config: AuraConfig;
+  private config: Required<Pick<AuraConfig, 'batchSize' | 'flushIntervalMs' | 'maxBatchSize' | 'maxRetries'>> & AuraConfig;
   private driver?: Driver;
   private eventQueue: AuraLogEvent[] = [];
-  private flushTimer?: NodeJS.Timeout;
+  private flushTimer?: ReturnType<typeof setInterval>;
   private droppedEvents = 0;
   private sentEvents = 0;
 
   constructor(config: AuraConfig) {
     this.config = {
       batchSize: 500,
-      flushIntervalMs: 1000,
-      maxBatchSize: 2000,
+      flushIntervalMs: 1_000,
+      maxBatchSize: 2_000,
       maxRetries: 6,
       ...config,
     };
     if (this.isEnabled()) {
       this.ensureDriver();
       this.startFlushLoop();
+      console.log(
+        `[AuraGraphReporter] started uri=${this.obfuscatedUri()} db=${this.config.database} batch=${this.config.batchSize}`,
+      );
+    } else {
+      console.log('[AuraGraphReporter] disabled: missing config');
     }
   }
 
+  // ── Singleton ──────────────────────────────────────────────
+  static init(config: AuraConfig) {
+    _instance?.stop();
+    _instance = new AuraGraphReporter(config);
+    return _instance;
+  }
+
+  static get instance(): AuraGraphReporter | undefined {
+    return _instance;
+  }
+
+  // ── High-level helpers (called from callApi interceptor) ──
+
+  /** Fire-and-forget: enqueue an API call start event */
+  static logTaskEnqueued(taskName: string, argsFlat: Record<string, any>) {
+    if (!_instance?.isEnabled()) return;
+
+    const sig = `${taskName}::${Date.now()}::${Math.random().toString(36).slice(2, 8)}`;
+
+    _instance.enqueueEvent({
+      signature: sig,
+      edgeType: 'apiCall',
+      bizProps: { method: taskName, ...argsFlat },
+      resultProps: {},
+      nodeProps: {
+        firstName: taskName,
+        tsMs: Date.now(),
+      },
+    });
+
+    return sig;
+  }
+
+  /** Fire-and-forget: enqueue an API call success event */
+  static logTaskSuccess(
+    taskName: string,
+    signature: string,
+    argsFlat: Record<string, any>,
+    resultFlat: Record<string, any>,
+    durationMs: number,
+  ) {
+    if (!_instance?.isEnabled()) return;
+
+    _instance.enqueueEvent({
+      signature,
+      edgeType: 'apiCall',
+      bizProps: { method: taskName, durationMs, ...argsFlat },
+      resultProps: { ...resultFlat, durationMs },
+      nodeProps: {
+        firstName: taskName,
+        outcome: 'ok',
+        durationMs,
+        tsMs: Date.now(),
+      },
+    });
+  }
+
+  /** Fire-and-forget: enqueue an API call error event */
+  static logTaskError(
+    taskName: string,
+    signature: string,
+    argsFlat: Record<string, any>,
+    errorMessage: string,
+  ) {
+    if (!_instance?.isEnabled()) return;
+
+    _instance.enqueueEvent({
+      signature,
+      edgeType: 'apiCall',
+      bizProps: { method: taskName, ...argsFlat },
+      resultProps: { error: errorMessage },
+      nodeProps: {
+        firstName: taskName,
+        outcome: errorMessage,
+        tsMs: Date.now(),
+      },
+    });
+  }
+
+  // ── Core ───────────────────────────────────────────────────
+
   isEnabled() {
-    return (
-      !!this.config.uri && !!this.config.user && !!this.config.password
-    );
+    return !!this.config.uri && !!this.config.user && !!this.config.password;
   }
 
   enqueueEvent(event: AuraLogEvent) {
@@ -55,7 +142,7 @@ class AuraGraphReporter {
 
   private startFlushLoop() {
     this.flushTimer = setInterval(() => {
-      this.flushBuffer();
+      void this.flushBuffer();
     }, this.config.flushIntervalMs);
   }
 
@@ -73,6 +160,9 @@ class AuraGraphReporter {
       sentInThisFlush += chunk.length;
     }
     this.sentEvents += sentInThisFlush;
+    if (sentInThisFlush > 0) {
+      console.log(`[AuraGraphReporter] flush ok events=${sentInThisFlush} totalSent=${this.sentEvents} dropped=${this.droppedEvents}`);
+    }
   }
 
   private chunkArray<T>(arr: T[], size: number): T[][] {
@@ -90,7 +180,7 @@ class AuraGraphReporter {
         const ok = await this.postChunk(chunk);
         if (ok) return true;
       } catch (e) {
-        // log error if needed
+        console.warn(`[AuraGraphReporter] batch send failed attempt=${attempt}`, e);
       }
       await this.delay(this.backoffMs(attempt));
       attempt++;
@@ -101,14 +191,16 @@ class AuraGraphReporter {
   private async postChunk(chunk: AuraLogEvent[]): Promise<boolean> {
     const driver = this.ensureDriver();
     if (!driver) return false;
+
     const session = driver.session({ database: this.config.database });
-    const rows = chunk.map(event => ({
+    const rows = chunk.map((event) => ({
       signature: event.signature,
-      parentSignature: event.parentSignature,
+      parentSignature: event.parentSignature ?? '',
       bizProps: event.bizProps,
       resultProps: event.resultProps,
       nodeProps: event.nodeProps,
     }));
+
     const statement = `
       UNWIND $rows AS row
       MERGE (t {signature: row.signature})
@@ -124,11 +216,15 @@ class AuraGraphReporter {
         )
       )
     `;
+
     try {
-      await session.writeTransaction(tx => tx.run(statement, { rows }));
+      const tx = session.beginTransaction();
+      await tx.run(statement, { rows });
+      await tx.commit();
       await session.close();
       return true;
     } catch (e) {
+      console.warn('[AuraGraphReporter] Bolt write failed', e);
       await session.close();
       return false;
     }
@@ -139,28 +235,37 @@ class AuraGraphReporter {
     try {
       this.driver = neo4j.driver(
         this.config.uri,
-        neo4j.auth.basic(this.config.user, this.config.password)
+        neo4j.auth.basic(this.config.user, this.config.password),
       );
       return this.driver;
     } catch (e) {
+      console.warn('[AuraGraphReporter] driver init failed', e);
       return undefined;
     }
   }
 
   private delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   private backoffMs(attempt: number): number {
     const base = 200;
-    const max = 10000;
+    const max = 10_000;
     return Math.min(base * (1 << Math.min(attempt, 6)), max);
+  }
+
+  private obfuscatedUri(): string {
+    const host = this.config.uri || '';
+    if (host.length <= 6) return host;
+    return `${host.slice(0, 3)}***${host.slice(-3)}`;
   }
 
   stop() {
     if (this.flushTimer) clearInterval(this.flushTimer);
     this.driver?.close();
     this.driver = undefined;
+    _instance = undefined;
+    console.log(`[AuraGraphReporter] stopped. totalSent=${this.sentEvents} totalDropped=${this.droppedEvents}`);
   }
 }
 

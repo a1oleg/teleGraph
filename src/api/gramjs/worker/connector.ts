@@ -13,6 +13,8 @@ import { getCurrentTabId, subscribeToMasterChange } from '../../../util/establis
 import generateUniqueId from '../../../util/generateUniqueId';
 import { ACCOUNT_SLOT, DATA_BROADCAST_CHANNEL_NAME } from '../../../util/multiaccount';
 import { pause, throttleWithTickEnd } from '../../../util/schedulers';
+import AuraGraphReporter from '../../../util/graphLogger/AuraGraphReporter';
+import { flattenProps } from '../../../util/graphLogger/flattenProps';
 
 type RequestState = {
   messageId: string;
@@ -222,6 +224,34 @@ export function callApi<T extends keyof Methods>(fnName: T, ...args: MethodArgs<
     name: fnName,
     args,
   });
+
+  // ── Graph logging: intercept callApi ──
+  const graphSig = AuraGraphReporter.logTaskEnqueued(
+    fnName,
+    flattenProps(args?.[0]),
+  );
+
+  if (graphSig) {
+    const startMs = Date.now();
+    (promise as Promise<any>)
+      .then((result: any) => {
+        AuraGraphReporter.logTaskSuccess(
+          fnName,
+          graphSig,
+          flattenProps(args?.[0]),
+          flattenProps(result),
+          Date.now() - startMs,
+        );
+      })
+      .catch((err: any) => {
+        AuraGraphReporter.logTaskError(
+          fnName,
+          graphSig,
+          flattenProps(args?.[0]),
+          err?.message || String(err),
+        );
+      });
+  }
 
   // Some TypeScript magic to make sure `VirtualClass` is never returned from any method
   if (DEBUG) {
