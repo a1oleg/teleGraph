@@ -6,28 +6,31 @@ export function GraphTask(taskName: string) {
     const originalMethod = descriptor.value;
 
     descriptor.value = async function (...args: any[]) {
-      // 1. Создаем событие "Начало"
-      AuraGraphReporter.logTaskEnqueued?.(taskName, args);
-      const startTime = Date.now();
-      try {
-        const result = await originalMethod.apply(this, args);
-        // 2. Успех: собираем snapshot и отправляем
-        AuraGraphReporter.logTaskSuccess?.(
-          taskName,
-          flattenProps(args),
-          flattenProps(result),
-          Date.now() - startTime
-        );
-        return result;
-      } catch (error: any) {
-        // 3. Ошибка: отправляем в граф "Провал"
-        AuraGraphReporter.logTaskError?.(
-          taskName,
-          flattenProps(args),
-          error?.message || String(error)
-        );
-        throw error;
-      }
+        // 1. Создаем событие "Начало" и signature
+        const argsFlat = flattenProps(args);
+        const signature = AuraGraphReporter.logTaskEnqueued?.(taskName, argsFlat) ?? '';
+        const startTime = Date.now();
+        try {
+          const result = await originalMethod.apply(this, args);
+          // 2. Успех: собираем snapshot и отправляем
+          AuraGraphReporter.logTaskSuccess?.(
+            taskName,
+            signature,
+            argsFlat,
+            flattenProps(result),
+            Date.now() - startTime
+          );
+          return result;
+        } catch (error: any) {
+          // 3. Ошибка: отправляем в граф "Провал"
+          AuraGraphReporter.logTaskError?.(
+            taskName,
+            signature,
+            argsFlat,
+            error?.message || String(error)
+          );
+          throw error;
+        }
     };
     return descriptor;
   };
