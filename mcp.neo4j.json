@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "neo4j-aura": {
+      "url": "bolt://neo4j+s://9d0c0b8b.databases.neo4j.io",
+      "transport": "http",
+      "description": "Neo4j Aura MCP connector",
+      "env": {
+        "NEO4J_USER": "neo4j",
+        "NEO4J_PASSWORD": "cgXA_t-7AjkHxoxFMJUzF1fEaFQ52Nou04bNxbTIRy8"
+      },
+      "timeout": 30000
+    }
+  }
+}

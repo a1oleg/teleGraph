@@ -137,6 +137,7 @@ class AuraGraphReporter {
 
   enqueueEvent(event: AuraLogEvent) {
     if (!this.isEnabled()) return;
+    console.log('[AuraGraphReporter] enqueueEvent', event);
     this.eventQueue.push(event);
   }
 
@@ -148,6 +149,7 @@ class AuraGraphReporter {
 
   async flushBuffer() {
     if (!this.isEnabled() || this.eventQueue.length === 0) return;
+    console.log('[AuraGraphReporter] flushBuffer start', this.eventQueue.length);
     const buffer = this.eventQueue.splice(0, this.config.batchSize);
     let sentInThisFlush = 0;
     const chunks = this.chunkArray(buffer, this.config.maxBatchSize);
@@ -160,6 +162,7 @@ class AuraGraphReporter {
       sentInThisFlush += chunk.length;
     }
     this.sentEvents += sentInThisFlush;
+    console.log('[AuraGraphReporter] flushBuffer end', sentInThisFlush);
     if (sentInThisFlush > 0) {
       console.log(`[AuraGraphReporter] flush ok events=${sentInThisFlush} totalSent=${this.sentEvents} dropped=${this.droppedEvents}`);
     }
@@ -192,6 +195,7 @@ class AuraGraphReporter {
     const driver = this.ensureDriver();
     if (!driver) return false;
 
+    console.log('[AuraGraphReporter] postChunk', chunk.length);
     const session = driver.session({ database: this.config.database });
     const rows = chunk.map((event) => ({
       signature: event.signature,
@@ -218,6 +222,7 @@ class AuraGraphReporter {
     `;
 
     try {
+      console.log('[AuraGraphReporter] postChunk Cypher', statement);
       const tx = session.beginTransaction();
       await tx.run(statement, { rows });
       await tx.commit();
